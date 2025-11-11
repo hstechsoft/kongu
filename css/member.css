@@ -1,0 +1,26 @@
+    body {
+            background: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-floating>.form-control,
+        .form-floating>.form-select {
+            height: calc(3.5rem + 2px);
+            line-height: 1.25;
+        }
+
+        .btn-submit {
+            display: block;
+            margin: 20px auto 0 auto;
+            width: 30%;
+            font-weight: 600;
+        }

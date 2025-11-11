@@ -1,0 +1,47 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Listen for Xdebug (PHP)",
+      "type": "php",
+      "request": "launch",
+      "port": 9003
+    },
+    {
+      "name": "Launch currently open PHP script",
+      "type": "php",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${fileDirname}",
+      "port": 0,
+      "runtimeArgs": [
+        "-dxdebug.start_with_request=yes" 
+      ],
+      "env": {
+        "XDEBUG_MODE": "debug,develop",
+        "XDEBUG_CONFIG": "client_port=${port}"
+      }
+    },
+    {
+      "name": "Launch Chrome for JS/jQuery Debugging",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost/jaysanERP/dispatch_clearance_form.html",
+      "webRoot": "E:/web/htdocs/jaysanERP",
+      "userDataDir": true,
+      "skipFiles": ["**/jquery*.js", "**/node_modules/**"],
+      "runtimeArgs": ["--disable-extensions"],
+      "trace": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "PHP + Chrome (XAMPP)",
+      "configurations": [
+        "Launch Chrome for JS/jQuery Debugging",
+        "Listen for Xdebug (PHP)"
+      ],
+      "stopAll": true
+    }
+  ]
+}

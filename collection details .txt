@@ -1,0 +1,29 @@
+with collection_details as(SELECT
+    mp.member_id,    
+    mp.paid_amount,
+    mp.emp_id,
+    emp.employee_name,
+    mem.user_name,
+    mem.teamid,
+   	
+   	mp.paid_date,
+   (SELECT gfc.group_number from group_finance_collections gfc WHERE gfc.id = mem.teamid) as team,
+    mp.payment_mode,
+                            JSON_ARRAYAGG(
+        JSON_OBJECT('user_name',user_name,'paid_amount',paid_amount))as details,
+    
+    sum(paid_amount) as amount
+    
+FROM
+    `memberspayment` mp
+INNER JOIN employees emp ON mp.emp_id =emp.id
+INNER join members mem on mem.id = mp.member_id
+WHERE emp.id = 20 GROUP by paid_date,teamid,payment_mode),
+
+cd_final as(SELECT cd.paid_date,cd.team,cd.emp_id, JSON_ARRAYAGG(
+        JSON_OBJECT('payment_mode',payment_mode,'pay_details',details))as details,sum(amount) as total_amount from collection_details cd GROUP by paid_date,teamid),
+        emp_pay_full as (SELECT sum(emp_payment.pay_amount)as total_emp_paid,pay_date,   JSON_ARRAYAGG(
+        JSON_OBJECT('mode',emp_payment.pay_mode,'paid_amount',emp_payment.pay_amount))as emp_amount_details from emp_payment WHERE emp_payment.emp_id = 20 GROUP by emp_payment.pay_date)
+        SELECT * from cd_final LEFT JOIN emp_pay_full ef  ON cd_final.paid_date = ef.pay_date 
+        UNION 
+          SELECT * from cd_final RIGHT JOIN emp_pay_full ef  ON cd_final.paid_date = ef.pay_date;

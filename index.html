@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+     <!-- bootsttrap icons -->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>Document</title>
+  
+  <!-- external css -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+  
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+
+
+
+</head>
+<body>
+    <section>
+   
+      </section>
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="myToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header ">
+            <strong class="me-auto toast-title">Toast Title</strong>
+            <small class="text-muted">Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body toast-description">
+            Hello, this is a Bootstrap toast message!
+          </div>
+        </div>
+      </div>
+<div class="container-fluid small m-0 p-0">
+    <!-- top bar -->
+   
+   <div id="hs_loader" class="d-none">
+  <div class="hs_loader-content">
+    <div class="hs_spinner"></div>
+    <p class="hs_loader-text">Please wait…</p>
+  </div>
+</div>
+    
+<section id="menu_bar">
+   
+</section>
+
+<!-- content -->
+
+
+
+                    <div class="row">
+
+                           <div class="col-md-6">
+                        <form class=" border rounded-4 shadow-sm bg-light needs-validation" id="pay_form" novalidate onsubmit="return false">
+                            
+
+                            <div class="card">
+                                <div class="card-header">
+  <h6 class="text-center " id="group_txt">Group Payment Entry</h6>
+                                </div>
+                                <div class="card-body">
+     
+                    <div class="form-floating mb-3 ">
+                        <select class="form-select" id="employee" name="employee" required>
+                            <option selected value="" disabled>Select Employee</option>
+               
+                        </select>
+                        <label for="employee">Employee
+                          <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                
+
+<div class="d-flex   justify-content-between  align-content-center">
+  <div class="form-floating mb-3 w-25">
+                      <select class="form-select" id="team_select" required>
+                        <option selected disabled value="">Choose...</option>
+                     
+                      </select>
+                     <label for="team_select">Group
+                        <span class="text-danger">*</span>
+                     </label>
+                       <div class="invalid-feedback">
+                          Kindly Select  Vaild
+                        </div>
+                    </div>
+
+                        <div class="form-floating flex-fill mb-3">
+                      <input type="text" class="form-control rounded-3" id="group_txt_auto" placeholder="" >
+                      <label for="group_txt_auto">Group
+                       </label>
+                    
+                    </div>
+
+</div>
+                  
+
+<div class="d-flex   justify-content-between  align-content-center">
+
+                    <div class="form-floating mb-3 flex-fill">
+  <select class="form-select" id="collection_date" >
+    <option selected disabled value="">Choose...</option>
+ 
+  </select>
+ <label for="collection_date">collection_date</label>
+   <div class="invalid-feedback">
+      Kindly Select  Vaild
+    </div>
+</div>
+
+    <div class="form-floating mb-2 flex-fill">
+  <input type="date" class="form-control rounded-3" id="paid_date" placeholder="" required>
+  <label for="paid_date">Paid Date
+  <span class="text-danger">*</span> </label>
+
+  <div class="invalid-feedback">
+    Kindly Enter  Vaild Data
+  </div>
+</div>
+</div>
+
+                    
+                    <div class="form-floating mb-3">
+                      <select class="form-select" id="member_select"  >
+                        <option selected disabled value="">Choose...</option>
+                     
+                      </select>
+                     <label for="member_select">Member
+                        
+                     </label>
+                       <div class="invalid-feedback">
+                          Kindly Select  Vaild
+                        </div>
+                    </div>
+
+                    
+     <!-- <div class="form-floating mb-2">
+  <input type="date" class="form-control rounded-3" id="demo_date" placeholder="" required>
+  <label for="demo_date">Payment Date
+  <span class="text-danger">*</span> </label>
+
+  <div class="invalid-feedback">
+    Kindly Enter  Vaild Data
+  </div>
+</div> -->
+
+    <!-- <div class="form-floating mb-2">
+  <input type="number" class="form-control rounded-3" id="amount_pay" placeholder="" required>
+  <label for="amount_pay">Amount
+  <span class="text-danger">*</span> </label>
+
+  <div class="invalid-feedback">
+    Kindly Enter  Vaild Data
+  </div>
+</div> -->
+
+<div class="table-responsive m-0 p-0 ">
+<table class="table caption-top table-bordered table-striped table-sm">
+    <caption>Group Pay Table <span id="pay_date" class="text-danger text-end"></span></caption>
+
+  <tbody id="group_pay_table" class="">
+   
+  
+
+  </tbody>
+
+
+</table>
+
+
+</div>
+
+<ul class="list-group " id="group_pay_list">
+
+</ul>
+
+                                </div>
+                                <div class="card-footer d-flex justify-content-between">
+                                     <button type="reset" class="btn btn-primary " id="reset_group_btn">Reset</button>
+                                       <button type="submit" class="btn btn-primary " id="add_group_btn">Submit</button>
+
+
+
+                                </div>
+                            </div>
+                   
+<!-- <div class="form-check form-switch">
+       <input class="form-check-input" type="checkbox"  id="switch_view" >
+       <label class="form-check-label" for="switch_view">
+      Group Pay On/Off
+       </label>
+     </div> -->
+
+  
+</form>
+    
+
+     
+                        </div>
+                             <div class="col-md-6">
+
+                              <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                  <div class="form-check form-switch mb-4">
+                                     <input class="form-check-input" type="checkbox"  id="toggle_report" >   
+                                     <label class="form-check-label" for="toggle_report"> Payment Report/Entry 
+                                
+                                     </label>
+                                   </div>
+<button type="button" class="btn btn-primary " id="download_report"><i class="fa fa-download" aria-hidden="true"></i></button>
+<button type="button" class="btn btn-primary " id="download_report_entry"><i class="fa fa-download" aria-hidden="true"></i></button>
+<button type="button" class="btn btn-outline-secondary border-0" id="pdf_button">       <i class="fa-solid fa-print"></i> </button>
+                         
+                                </div>
+                                <div class="card-body">
+                                                            <div class="table-responsive" id="report_full_div">
+                          <table class="table caption-top table-bordered table-striped align-middle text-center" id="report_full_tbl">
+    <caption>Consolidated Payment Report Table</caption>
+    <thead>
+   <tr class="text-bg-secondary"><th colspan="100" id="title_tbl"></th></tr>
+    </thead>
+ 
+  <thead id="report_all_head">
+   
+  </thead>
+  <tbody id="report_all_tbl">
+    <!-- Table rows go here -->
+  </tbody>
+</table>
+   </div>
+
+   <div class="table-responsive d-none" id="report_entry_div" >
+    <table class="table caption-top table-bordered table-striped align-middle text-center small" id="report_entry_tbl">
+<caption>Entry Table</caption>
+<thead>
+<tr class="text-bg-secondary"><th colspan="100" id="title_tbl_entry"></th></tr>
+</thead>
+
+<thead id="report_entry_head" class="small">
+
+</thead>
+<tbody id="report_entry_tbl_body" class="small">
+<!-- Table rows go here -->
+
+</tbody>
+</table>
+</div>
+                                </div>
+                              </div>
+
+                        </div>
+
+                          <div class="table-responsive">
+<table class="table caption-top table-bordered table-striped align-middle text-center">
+    <caption>Payment Report Table</caption>
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">collection_date</th>
+      <th scope="col">Payable</th>
+      <th scope="col">Paid Amount</th>
+   
+      <th scope="col">Balance</th>
+   
+      <th scope="col">status</th>
+      <th scope="col">his_html</th>
+    </tr>
+  </thead>
+  <tbody id="report_tbl">
+    <!-- Table rows go here -->
+  </tbody>
+</table>
+
+
+<!-- Example usage in a table header -->
+<!-- <th class="vertical-text">Vertical Header</th> -->
+</div>
+                    </div>
+
+
+
+
+
+
+</div>
+
+
+   
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+
+<!-- jQuery UI CSS -->
+
+    <!-- bootstrap include -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+<!-- font awesome -->
+<script src="https://kit.fontawesome.com/86b62f3d3e.js" crossorigin="anonymous"></script>
+
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+<!-- Sweet alert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+
+
+<!-- external js -->
+<script src="js/index.js" type="module"></script>
+<script src="js/menu.js" type="module"></script>
+<!-- <script src="js/get_all_id.js" type="module"></script> -->
+
+</body>
+</html>

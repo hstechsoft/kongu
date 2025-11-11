@@ -1,0 +1,53 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "name": "Listen for Xdebug (PHP)",
+      "type": "php",
+      "request": "launch",
+      "port": 9003
+    },
+    {
+      "name": "Launch currently open PHP script",
+      "type": "php",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${fileDirname}",
+      "port": 0,
+      "runtimeArgs": [
+        "-dxdebug.start_with_request=yes"
+      ],
+      "env": {
+        "XDEBUG_MODE": "debug,develop",
+        "XDEBUG_CONFIG": "client_port=${port}"
+      }
+    },
+    {
+      "name": "Launch Chrome for JS/jQuery Debugging",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost/kongu_finance/emp_expense_single.html",
+      "webRoot": "E:/web/htdocs/kongu_finance",
+      "userDataDir": true,
+  "skipFiles": [
+        "**/node_modules/**",
+        "**/vendor/**",
+        "**/lib/**",
+        "**/assets/**/jquery-*.min.js"                           // <- stop skipping your own files named jquery_*.js
+      ],
+      "runtimeArgs": ["--disable-extensions"],
+      "trace": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "PHP + Chrome (XAMPP)",
+      "configurations": [
+        "Launch Chrome for JS/jQuery Debugging",
+        "Listen for Xdebug (PHP)"
+      ],
+      "stopAll": true
+    }
+  ]
+}

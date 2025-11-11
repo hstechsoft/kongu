@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+     <!-- bootsttrap icons -->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>Document</title>
+  
+  <!-- external css -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+  
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+
+
+
+</head>
+<body>
+    <section>
+   
+      </section>
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="myToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header ">
+            <strong class="me-auto toast-title">Toast Title</strong>
+            <small class="text-muted">Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body toast-description">
+            Hello, this is a Bootstrap toast message!
+          </div>
+        </div>
+      </div>
+<div class="container-fluid ">
+    <!-- top bar -->
+   
+   
+    
+<section id="menu_bar">
+   
+</section>
+
+<!-- content -->
+    <div class="form-container">
+        <h3 class="text-center mb-4">User Registration Form</h3>
+<form class="p-4 border rounded-4 shadow-sm bg-light needs-validation" id="memberForm" novalidate onsubmit="return false">
+
+            <input type="hidden" id="member_id" name="member_id">
+            <div class="row">
+                <!-- Client Info -->
+                <div class="col-md-6">
+                    <h4>Client Information</h4>
+                    <div class="row g-3">
+                        <div class="col-md-12 form-floating">
+                            <input type="text" class="form-control" name="user_name" id="user_name"
+                                placeholder="Enter the name">
+                            <label for="user_name">Full Name</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Enter phone">
+                            <label for="phone">Phone Number</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="tel" class="form-control" name="phone2" id="phone2"
+                                placeholder="Enter alt phone">
+                            <label for="phone2">Alternative Phone</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="text" class="form-control" name="aadhar" id="aadhar"
+                                placeholder="Enter Aadhar">
+                            <label for="aadhar">Aadhar Number</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <textarea class="form-control" placeholder="Enter address" id="city" name="city"
+                                style="height:100px"></textarea>
+                            <label for="city">Address</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="text" class="form-control" name="district" id="district"
+                                placeholder="Enter district">
+                            <label for="district">District</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="text" class="form-control" name="pincode" id="pincode"
+                                placeholder="Enter pincode">
+                            <label for="pincode">Pincode</label>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Location</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="location_url" id="location_url"
+                                    placeholder="Select location from map">
+                                <button class="btn btn-outline-primary" type="button" >📍 Pick
+                                    Location</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <input type="checkbox" name="leader" id="leader">
+                            <label for="leader">Are You Team leader?</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nominee Info -->
+                <div class="col-md-6">
+                    <h4>Nominee Information</h4>
+                    <div class="row g-3">
+                        <div class="col-md-12 form-floating">
+                            <input type="text" class="form-control" name="nominee_name" id="nominee_name"
+                                placeholder="Enter the Nominee Name">
+                            <label for="nominee_name">Nominee Name</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="tel" class="form-control" name="nominee_phone" id="nominee_phone"
+                                placeholder="Enter Nominee phone">
+                            <label for="nominee_phone">Nominee Phone Number</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="tel" class="form-control" name="nominee_phone2" id="nominee_phone2"
+                                placeholder="Enter Nominee alt phone">
+                            <label for="nominee_phone2">Nominee Alternative Phone</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="text" class="form-control" name="nominee_aadhar" id="nominee_aadhar"
+                                placeholder="Enter Nominee Aadhar">
+                            <label for="nominee_aadhar">Nominee Aadhar Number</label>
+                        </div>
+                        <div class="col-md-12 form-floating">
+                            <input type="text" class="form-control" name="nominee_relationship"
+                                id="nominee_relationship" placeholder="Enter Nominee Relationship">
+                            <label for="nominee_relationship">Nominee Relationship</label>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="checkbox" id="different_address" name="different_address">
+                            <label for="different_address">Nominee has different address?</label>
+                        </div>
+                        <div id="nominee_address_fields" style="display: none;">
+                            <div class="col-md-12 form-floating py-3">
+                                <textarea class="form-control" placeholder="Enter nominee address" id="nominee_city"
+                                    name="nominee_city" style="height:100px"></textarea>
+                                <label for="nominee_city">Nominee Address</label>
+                            </div>
+                            <div class="col-md-12 form-floating py-3">
+                                <input type="text" class="form-control" name="nominee_district" id="nominee_district"
+                                    placeholder="Enter nominee district">
+                                <label for="nominee_district">Nominee District</label>
+                            </div>
+                            <div class="col-md-12 form-floating py-3">
+                                <input type="text" class="form-control" name="nominee_pincode" id="nominee_pincode"
+                                    placeholder="Enter nominee pincode">
+                                <label for="nominee_pincode">Nominee Pincode</label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Location</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="nominee_location_url"
+                                        id="nominee_location_url" placeholder="Select location from map">
+                                    <button class="btn btn-outline-primary" type="button" onclick="nominee()">📍 Pick
+                                        Location</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row g-3">
+                <div class="col-md-4 form-floating">
+                   
+                   
+                    <div class="form-floating mb-3">
+                      <select class="form-select" id="team_select" >
+                        <option selected disabled value="">Choose...</option>
+                     
+                      </select>
+                     <label for="team_select">Group</label>
+                       <div class="invalid-feedback">
+                          Kindly Select  Vaild
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 form-floating">
+                    <input type="text" class="form-control" disabled name="amount" id="amount" placeholder="Enter Loan Amount">
+                    <label for="amount">Loan Amount</label>
+                </div>
+
+                   <div class="col-md-4 form-floating">
+                    <div class="form-floating mb-2">
+                  <input type="date" class="form-control rounded-3" id="start_date" placeholder="" >
+                  <label for="start_date">Start Date
+                  </label>
+                
+                  <div class="invalid-feedback">
+                    Kindly Enter  Vaild Data
+                  </div>
+                </div>
+             
+                </div>
+
+                <!-- <div class="col-md-6 form-floating">
+                    <input type="text" class="form-control" name="interest" id="interest" placeholder="Enter Loan Tnterest in %">
+                    <label for="interest">Loan Interest in %</label>
+                </div> -->
+
+                <!-- <div class="col-md-6 d-flex align-items-start gap-3">
+                    <div class="flex-grow-1">
+                        <input type="file" class="form-control" name="photo" id="photo" accept="image/*">
+                    </div>
+                    <div>
+                        <img id="photoPreview" src="" alt="Preview" class="img-thumbnail"
+                            style="width:100px;height:100px;object-fit:cover;">
+                    </div>
+                </div> -->
+
+           <div class="col-md-6">
+            <div class="table-responsive">
+            <table class="table caption-top table-bordered table-striped ">
+                <caption>Summary Table</caption>
+           
+              <tbody id="summary_table">
+                <tr>
+            <th scope="col">Loan Amount</th>
+                  <td></td>
+
+                            </tr>
+            <tr>
+<th scope="col">Total Weeks</th>
+<td>
+
+</td>
+            </tr>
+            <tr>
+<th scope="col">Document Charge</th>
+<td></td>
+            </tr>
+            <tr>
+ <th scope="col">Amount Pay Now</th>
+ <td></td>
+            </tr>
+              </tbody>
+            
+            
+            </table>
+            </div>
+           </div>
+
+
+ <div class="col-md-6 d-flex justify-content-between  ">
+       <div class="card ms-3" id="user_photo">
+                    <div class="card-header text-bg-danger text-center">
+                      <h6>User Photo</h6>
+                          <div class="input-group visually-hidden">
+                              <input type="file" accept="image/*" capture="environment"  class="form-control" id="user_photo_up">
+                              <label class="input-group-text" for="user_photo_up">user photo</label>
+                            </div>
+                      </div>
+                   
+                      <div class="card-body m-0 p-0 mx-auto">
+                        <div style="width: 100px;   height : 100px; overflow: hidden;">
+                          <img id="user_photo_preview" src="images/admin.png" class="img-fluid img-thumbnail" style="height: 100%; width: 100%; object-fit:contain ;" alt="">
+                        </div>
+                          <!-- <img id="user_photo_photo_preview" class="img-fluid"  style="width: 10rem;" src="images/admin.png" alt> -->
+                      </div>
+                  </div>
+
+  <div >
+                    <div>
+                        <input type="checkbox" name="verification" id="verification">
+                        <label for="verification">Client Verification</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="nominee_verification" id="nominee_verification">
+                        <label for="nominee_verification">Nominee Verification</label>
+                    </div>
+                </div>
+ </div>
+                
+
+              
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary" id="submit_btn">Submit</button>
+                  <button type="submit" class="btn btn-primary  d-none" id="update_btn">update</button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- View Members -->
+    <section class="mt-5 px-5">
+        <h4 class="mb-3">View User Details</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-light">
+                    <tr>
+                     
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                          <th>Aadhar</th>
+                        <th>Loan Amount</th>
+                         <th>photo</th>
+                         <th>Location</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="membersTable">
+                  
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">Developed by <a href="#" class="text-decoration-none fw-bold text-warning">HSTECH SOFT</a></p>
+        </div>
+    </footer>
+</div>
+<td>
+<a href='https://maps.app.goo.gl/8t6jARG9R1wcPLAx8' target='_blank' rel='noopener'>
+    <button type='button' class='btn btn-outline-primary border-0' >
+        <i class='fa-solid fa-location-dot'></i>
+    </button>
+</a>
+</td>
+
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+
+<!-- jQuery UI CSS -->
+
+    <!-- bootstrap include -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+<!-- font awesome -->
+<script src="https://kit.fontawesome.com/86b62f3d3e.js" crossorigin="anonymous"></script>
+
+<!-- Sweet alert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<!-- external js -->
+<script src="js/memberCreation.js" type="module"></script>
+<script src="js/menu.js" type="module"></script>
+<!-- <script src="js/get_all_id.js" type="module"></script> -->
+
+</body>
+</html>
