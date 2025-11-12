@@ -40,7 +40,7 @@ $sql .= "SELECT
 FROM
     `salary_payment`
 WHERE
-    salary_year = 2025 AND salary_month = 10 and emp_id = 20
+    salary_year = $salary_year AND salary_month = $salary_month and emp_id = $emp_id
 GROUP BY
     salary_year,
     salary_month";

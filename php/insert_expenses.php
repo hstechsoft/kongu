@@ -30,11 +30,11 @@ $sql = "INSERT  INTO  expense (exp_des,exp_cat,exp_amount,exp_date,exp_emp_id)
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
-  echo "ok";
+
   
 }
 
-
+  echo "ok";
 
 $conn->close();
 
