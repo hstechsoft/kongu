@@ -1,7 +1,7 @@
 <?php
  include 'db_head.php';
 
- $exp_id = test_input($_GET['exp_id']);
+ $exp_id_arr = ($_POST['exp_id_arr']);
 
 
  
@@ -14,14 +14,18 @@ $data = "'".$data."'";
 return $data;
 }
 
-
+foreach($exp_id_arr as $exp_id){
  $sql =  "DELETE  FROM  expense WHERE exp_id =  $exp_id";
 
   if ($conn->query($sql) === TRUE) {
-   echo "ok";
+
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
   }
+
+}
+
+   echo "ok";
 $conn->close();
 
  ?>
