@@ -19,22 +19,6 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 
-  <style>
-    /* Hide the table header on small screens and display rows as blocks */
-    @media screen and (max-width: 767px) {
-      .exp_table {
-        display: none !important;
-      }
-
-      #exp_table {
-        display: block !important;
-      }
-    }
-    #exp_table{
-      display: none;
-    }
-  </style>
-
 
 </head>
 
@@ -115,86 +99,93 @@
 
     </div>
 
-    <div class="card mt-5" id="">
-      <div class="card-header text-center">
-        <h2>ADD EXPENSES</h2>
-      </div>
-      <div class="card-body" id="">
-        <form class="p-4 border rounded-4 shadow-sm bg-light needs-validation" id="" novalidate onsubmit="return false">
 
-          <div class="row">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mt-5" id="">
+          <div class="card-header text-center">
+            <h2>ADD EXPENSES</h2>
+          </div>
+          <div class="card-body" id="">
+            <form class="p-4 border rounded-4 shadow-sm bg-light needs-validation" id="" novalidate
+              onsubmit="return false">
 
-            <div class="col-md-6">
-              <div class="form-floating mb-2">
-                <input type="date" class="form-control rounded-3" id="exp_date" placeholder="" required>
-                <label for="exp_date">Date
-                  <span class="text-danger">*</span> </label>
+              <div class="row">
 
-                <div class="invalid-feedback">
-                  Kindly Enter Vaild Data
+                <div class="col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="date" class="form-control rounded-3" id="exp_date" placeholder="" required>
+                    <label for="exp_date">Date
+                      <span class="text-danger">*</span> </label>
+
+                    <div class="invalid-feedback">
+                      Kindly Enter Vaild Data
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="col-md-6">
-              <div class="form-floating mb-2">
-                <input type="text" class="form-control rounded-3" id="exp_category" placeholder="" required>
-                <label for="exp_category">category
-                  <span class="text-danger">*</span> </label>
+                <div class="col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control rounded-3" id="exp_category" placeholder="" required>
+                    <label for="exp_category">category
+                      <span class="text-danger">*</span> </label>
 
-                <div class="invalid-feedback">
-                  Kindly Enter Vaild Data
+                    <div class="invalid-feedback">
+                      Kindly Enter Vaild Data
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="col-md-6">
-              <div class="form-floating mb-2">
-                <input type="text" class="form-control rounded-3" id="exp_description" placeholder="" required>
-                <label for="exp_description">Description
-                  <span class="text-danger">*</span> </label>
+                <div class="col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control rounded-3" id="exp_description" placeholder="" required>
+                    <label for="exp_description">Description
+                      <span class="text-danger">*</span> </label>
 
-                <div class="invalid-feedback">
-                  Kindly Enter Vaild Data
+                    <div class="invalid-feedback">
+                      Kindly Enter Vaild Data
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="col-md-6">
-              <div class="form-floating mb-2">
-                <input type="text" class="form-control rounded-3" id="exp_amount" placeholder="" required>
-                <label for="exp_amount">Amount
-                  <span class="text-danger">*</span> </label>
+                <div class="col-md-6">
+                  <div class="form-floating mb-2">
+                    <input type="text" class="form-control rounded-3" id="exp_amount" placeholder="" required>
+                    <label for="exp_amount">Amount
+                      <span class="text-danger">*</span> </label>
 
-                <div class="invalid-feedback">
-                  Kindly Enter Vaild Data
+                    <div class="invalid-feedback">
+                      Kindly Enter Vaild Data
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="text-center">
-              <button type="reset" class="btn btn-primary " id="add_expense">ADD</button>
-              <button type="reset" class="btn btn-primary d-none" id="edit_expense">Update</button>
-            </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary " id="add_expense">ADD</button>
+                  <button type="reset" class="btn btn-primary d-none" id="edit_expense">Update</button>
+                  <button type="reset" class="btn btn-danger d-none" id="delete_btn"><i class="fa fa-trash"></i></button>
+                </div>
+
+              </div>
+            </form>
 
           </div>
-        </form>
-
-      </div>
-    </div>
-
-    <div class="card mt-5" id="">
-
-      <div class="card-header d-flex justify-content-center text-bg-info" id="">
-        Expenditure Table
+        </div>
       </div>
 
-      <div class="card-body" id="">
+      <div class="col-md-6">
+        <div class="card mt-5" id="">
 
-        <ul class="list-group" id="exp_table">
-        </ul>
+          <div class="card-header d-flex justify-content-center text-bg-info" id="">
+            Expenditure Table
+          </div>
 
-        <div class="table-responsive exp_table">
+          <div class="card-body" id="">
+
+            <ul class="list-group" id="exp_table">
+            </ul>
+
+            <!-- <div class="table-responsive exp_table">
           <table class="table caption-top table-bordered table-striped ">
             <caption></caption>
             <thead>
@@ -216,18 +207,24 @@
 
 
           </table>
+        </div> -->
+
+          </div>
+
+          <div class="card-footer ">
+            <div class="text-center">
+
+              <button type="submit" class="btn btn-primary " id="submit_exp_btn">Submit</button>
+            </div>
+          </div>
+
         </div>
-
       </div>
-
-      <div class="card-footer ">
-        <div class="text-center">
-
-          <button type="submit" class="btn btn-primary " id="submit_exp_btn">Submit</button>
-        </div>
-      </div>
-
     </div>
+
+
+
+
 
   </div>
 
@@ -258,7 +255,7 @@
   <!-- external js -->
   <script src="js/expense.js" type="module"></script>
   <script src="js/menu.js" type="module"></script>
-  <!-- <script src="js/get_all_id.js" type="module"></script> -->
+  <script src="js/get_all_id.js" type="module"></script>
 
 </body>
 

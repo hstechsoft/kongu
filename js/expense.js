@@ -86,57 +86,70 @@ $(document).ready(function () {
 
     });
 
-    $("#add_expense").on('click', function () {
+    $("#add_expense").on("click", function () {
+        var exp_cat = $("#exp_category").val().trim();
+        var exp_date = $("#exp_date").val().trim();
+        var exp_des = $("#exp_description").val().trim();
+        var exp_amount = $("#exp_amount").val().trim();
 
-        var exp_cat = $("#exp_category").val();
-        var exp_date = $("#exp_date").val();
-        var exp_des = $("#exp_description").val();
-        var exp_amount = $("#exp_amount").val();
-
-        if ($("#exp_amount").val() != "") {
-            $("#expenditure_table_body").append(`<tr><td>${count + 1}</td><td>${exp_date}</td><td>${exp_cat}</td><td>${exp_des}</td><td>${exp_amount}</td><td><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></td></tr>`)
-
-            $("#exp_table").append(`<ul class="list-group"><li class="list-group-item">${obj.exp_date} - ${obj.exp_cat} - ${obj.exp_amount}</li><li class="list-group-item">${obj.exp_des}</li><li class="list-group-item"><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></li></ul>`);
-
-            count++;
+        if (exp_amount === "") {
+            salert("Warning", "Please enter the amount", "warning");
+            return;
         }
-        else {
-            salert("Warning", "Please Enter the amount", 'warning');
-        }
+
+        $("#exp_table").append(`
+        <ul class="list-group">
+            <li class="list-group-item">${exp_date} - ${exp_cat} - ${exp_amount}</li>
+            <li class="list-group-item">${exp_des}</li>
+        </ul>
+    `);
+
+        $("#exp_category").val("");
+        $("#exp_description").val("");
+        $("#exp_amount").val("");
+    });
+
+
+
+
+    $(".fa-trash").on("click", function () {
+        $(this).data("row").remove();
+        $("#edit_expense").trigger();
+
+        // $("#expenditure_table_body tr").each(function (index) {
+
+        //     $(this).find("td").eq(0).text(index + 1);
+        //     count = index + 1;
+        // });
 
     })
 
 
 
-    $("#expenditure_table_body").on("click", ".fa-trash", function () {
-        $(this).closest("tr").remove();
+    $("#exp_table").on("click", "ul", function () {
+        var row = $(this);
 
-        $("#expenditure_table_body tr").each(function (index) {
-
-            $(this).find("td").eq(0).text(index + 1);
-            count = index + 1;
-        });
-
-    })
-
-
-
-    $("#expenditure_table_body").on("click", ".fa-edit", function () {
-
-        var row = $(this).closest("tr");
         $("#edit_expense").data("row", row);
-        $("#exp_category").val(row.find("td").eq(2).text());
-        $("#exp_date").val(row.find("td").eq(1).text());
-        $("#exp_description").val(row.find("td").eq(3).text());
-        $("#exp_amount").val(row.find("td").eq(4).text());
-        // $(this).closest("tr").remove();
+        $(".fa-trash").data("row", row);
+
+        var parts = row.find("li").eq(0).text().split(" - ").map(p => p.trim());
+        var exp_date = parts[1];
+        var exp_cat = parts[0];
+        var exp_amount = parts[2];
+        var exp_des = row.find("li").eq(1).text().trim();
+
+        $("#exp_date").val(exp_date);
+        $("#exp_category").val(exp_cat);
+        $("#exp_amount").val(exp_amount);
+        $("#exp_description").val(exp_des);
 
         $("#add_expense").addClass("d-none");
         $("#edit_expense").removeClass("d-none");
-    })
+        $("#delete_btn").removeClass("d-none");
+    });
+
 
     $("#edit_expense").on("click", function () {
-
         let row = $(this).data("row");
 
         if (!row) {
@@ -144,53 +157,63 @@ $(document).ready(function () {
             return;
         }
 
-        var exp_cat = $("#exp_category").val();
-        var exp_date = $("#exp_date").val();
-        var exp_des = $("#exp_description").val();
-        var exp_amount = $("#exp_amount").val();
+        var exp_cat = $("#exp_category").val().trim();
+        var exp_date = $("#exp_date").val().trim();
+        var exp_des = $("#exp_description").val().trim();
+        var exp_amount = $("#exp_amount").val().trim();
 
-        row.find("td").eq(1).text(exp_date);
-        row.find("td").eq(2).text(exp_cat);
-        row.find("td").eq(3).text(exp_des);
-        row.find("td").eq(4).text(exp_amount);
+        // row.find("li").eq(0).text(`${exp_cat} - ${exp_date} - ${exp_amount}`);
+        // row.find("li").eq(1).text(exp_des);
+console.log(row.data("exp_id"),exp_des, exp_cat, exp_amount, exp_date );
 
-        console.log(row.data("exp_id"));
-        console.log(current_user_id);
-
-        // salert("Success", "Expense updated successfully!", "success");
+        
         if (row.data("exp_id")) {
-            update_expenses(exp_des, exp_cat, exp_amount, exp_date, row.data("exp_id"))
+            update_expenses(exp_des, exp_cat, exp_amount, exp_date, row.data("exp_id"));
         }
+
+        
+        $("#add_expense").removeClass("d-none");
+        $("#edit_expense").addClass("d-none");
+        $("#delete_btn").addClass("d-none");
+        $("#exp_category, #exp_date, #exp_description, #exp_amount").val("");
+
+        
         $(this).removeData("row");
 
-    })
+        salert("Success", "Expense updated successfully!", "success");
+    });
 
     $("#submit_exp_btn").on('click', function () {
-        var exp_arr = [];
+        const exp_arr = [];
 
-        $("#expenditure_table_body tr").each(function () {
-            var exp_date = $(this).find("td").eq(1).text().trim();
-            var exp_cat = $(this).find("td").eq(2).text().trim();
-            var exp_des = $(this).find("td").eq(3).text().trim();
-            var exp_amount = $(this).find("td").eq(4).text().trim();
-            var exp_id = $(this).data("exp_id");
-            console.log(exp_id);
+        $("#exp_table ul").each(function () {
+            const $ul = $(this);
+            const parts = $ul.find("li").eq(0).text().split(" - ").map(p => p.trim());
+            const [exp_date, exp_cat, exp_amount] = parts;
+            const exp_des = $ul.find("li").eq(1).text().trim();
+            const exp_id = $ul.data("exp_id");
 
-            if (exp_date || exp_cat || exp_des || exp_amount || typeof exp_id === "undefined") {
+            if (exp_date && exp_cat && exp_des && exp_amount && typeof exp_id == "undefined") {
                 exp_arr.push({
-                    exp_date: exp_date,
-                    exp_cat: exp_cat,
-                    exp_des: exp_des,
-                    exp_amount: exp_amount
+                    exp_id,
+                    exp_date,
+                    exp_cat,
+                    exp_des,
+                    exp_amount: parseFloat(exp_amount)
                 });
-            }
-            else {
-                salert("Error", "Data missing", "error")
+            } else {
+                salert("Error", "Data missing or invalid", "error");
             }
         });
 
-        insert_expenses(exp_arr, current_user_id);
-    })
+        if (exp_arr.length > 0) {
+            insert_expenses(exp_arr, current_user_id);
+            $("#exp_date").val("");
+        } else {
+            salert("Error", "No valid expense data found", "error");
+        }
+    });
+
 
     $("#exp_date").on("input", function () {
 
@@ -218,17 +241,17 @@ function get_expenses_single(data) {
 
 
             if (response.trim() != "error") {
-                $("#expenditure_table_body").empty();
-                count = 0;
+                $("#exp_table").find("ul").empty();
+                // count = 0;
                 var obj = JSON.parse(response);
 
 
                 console.log(response);
                 obj.forEach(function (obj) {
-                    count += 1;
-                    $("#expenditure_table_body").append(`<tr data-exp_id=${obj.exp_id}><td>${count}</td><td>${obj.exp_date}</td><td>${obj.exp_cat}</td><td>${obj.exp_des}</td><td>${obj.exp_amount}</td><td><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></td></tr>`)
+                    // count += 1;
+                    // $("#expenditure_table_body").append(`<tr data-exp_id=${obj.exp_id}><td>${count}</td><td>${obj.exp_date}</td><td>${obj.exp_cat}</td><td>${obj.exp_des}</td><td>${obj.exp_amount}</td><td><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></td></tr>`)
 
-                    $("#exp_table").append(`<ul class="list-group"><li class="list-group-item">${obj.exp_date} - ${obj.exp_cat} - ${obj.exp_amount}</li><li class="list-group-item">${obj.exp_des}</li><li class="list-group-item"><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></li></ul>`);
+                    $("#exp_table").append(`<ul class="list-group" data-exp_id=${obj.exp_id}><li class="list-group-item">${obj.exp_cat} - ${obj.exp_date} - ${obj.exp_amount}</li><li class="list-group-item">${obj.exp_des}</li></ul>`);
                 });
 
                 //    get_sales_order()
