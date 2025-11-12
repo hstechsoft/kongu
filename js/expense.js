@@ -116,13 +116,13 @@ $(document).ready(function () {
 
         $("#exp_table").append(`<ul class="list-group text-center" data-exp_cat='${exp_cat}' data-exp_des='${exp_des}' data-exp_date='${exp_date}' data-exp_amount='${exp_amount}'>
                         
-                        <div class="card expense-card p-3">
-                        <div class="d-flex justify-content-between align-items-center p-2">
+                        <div class="card expense-card p-1">
+                        <div class="d-flex justify-content-between align-items-center p-0">
                             <div class="expense-name">${exp_cat}</div>
                             <div class="expense-date">${exp_date}</div>
                             <div class="expense-amount">₹ ${exp_amount}</div>
                         </div>
-                        <hr>
+                        <hr class="p-0">
                             <p class="expense-des mb-0">${exp_des}</p>
                     </div>
 
@@ -372,13 +372,13 @@ function get_expenses_single(data) {
 
                     $("#exp_table").append(`<ul class="list-group text-center my-2" data-exp_id='${obj.exp_id}' data-exp_cat='${obj.exp_cat}' data-exp_des='${obj.exp_des}' data-exp_date='${obj.exp_date}' data-exp_amount='${obj.exp_amount}'>
                         
-                        <div class="card expense-card p-3">
-                        <div class="d-flex justify-content-between align-items-center p-2">
+                        <div class="card expense-card p-1">
+                        <div class="d-flex justify-content-between align-items-center p-0">
                             <div class="expense-name">${obj.exp_cat}</div>
                             <div class="expense-date">${obj.exp_date}</div>
                             <div class="expense-amount">₹ ${obj.exp_amount}</div>
                         </div>
-                        <hr>
+                        <hr class="p-0">
                             <p class="expense-des mb-0">${obj.exp_des}</p>
                     </div>
 
@@ -434,13 +434,13 @@ function get_expense_approve_sts(data) {
 
                     $("#exp_table").append(`<ul class="list-group text-center my-2" data-exp_id='${obj.exp_id}' data-exp_cat='${obj.exp_cat}' data-exp_des='${obj.exp_des}' data-exp_date='${obj.exp_date}' data-exp_amount='${obj.exp_amount}'>
                         
-                        <div class="card expense-card p-3">
-                        <div class="d-flex justify-content-between align-items-center p-2">
+                        <div class="card expense-card p-1">
+                        <div class="d-flex justify-content-between align-items-center p-0">
                             <div class="expense-name">${obj.exp_cat}</div>
                             <div class="expense-date">${obj.exp_date}</div>
                             <div class="expense-amount">₹ ${obj.exp_amount}</div>
                         </div>
-                        <hr>
+                        <hr class="p-0">
                             <p class="expense-des mb-0">${obj.exp_des}</p>
                     </div>
 
