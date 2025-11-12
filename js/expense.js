@@ -95,6 +95,9 @@ $(document).ready(function () {
 
         if ($("#exp_amount").val() != "") {
             $("#expenditure_table_body").append(`<tr><td>${count + 1}</td><td>${exp_date}</td><td>${exp_cat}</td><td>${exp_des}</td><td>${exp_amount}</td><td><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></td></tr>`)
+
+            $("#exp_table").append(`<ul class="list-group"><li class="list-group-item">${obj.exp_date} - ${obj.exp_cat} - ${obj.exp_amount}</li><li class="list-group-item">${obj.exp_des}</li><li class="list-group-item"><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></li></ul>`);
+
             count++;
         }
         else {
@@ -224,6 +227,8 @@ function get_expenses_single(data) {
                 obj.forEach(function (obj) {
                     count += 1;
                     $("#expenditure_table_body").append(`<tr data-exp_id=${obj.exp_id}><td>${count}</td><td>${obj.exp_date}</td><td>${obj.exp_cat}</td><td>${obj.exp_des}</td><td>${obj.exp_amount}</td><td><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></td></tr>`)
+
+                    $("#exp_table").append(`<ul class="list-group"><li class="list-group-item">${obj.exp_date} - ${obj.exp_cat} - ${obj.exp_amount}</li><li class="list-group-item">${obj.exp_des}</li><li class="list-group-item"><i class='fa fa-edit pe-2 text-warning'></i><i class='fa fa-trash text-danger'></i></li></ul>`);
                 });
 
                 //    get_sales_order()

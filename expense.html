@@ -19,6 +19,21 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 
+  <style>
+    /* Hide the table header on small screens and display rows as blocks */
+    @media screen and (max-width: 767px) {
+      .exp_table {
+        display: none !important;
+      }
+
+      #exp_table {
+        display: block !important;
+      }
+    }
+    #exp_table{
+      display: none;
+    }
+  </style>
 
 
 </head>
@@ -120,7 +135,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="col-md-6">
               <div class="form-floating mb-2">
                 <input type="text" class="form-control rounded-3" id="exp_category" placeholder="" required>
@@ -170,13 +185,16 @@
 
     <div class="card mt-5" id="">
 
-       <div class="card-header d-flex justify-content-center text-bg-info" id="">
+      <div class="card-header d-flex justify-content-center text-bg-info" id="">
         Expenditure Table
       </div>
 
       <div class="card-body" id="">
 
-        <div class="table-responsive">
+        <ul class="list-group" id="exp_table">
+        </ul>
+
+        <div class="table-responsive exp_table">
           <table class="table caption-top table-bordered table-striped ">
             <caption></caption>
             <thead>
