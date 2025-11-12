@@ -9,6 +9,8 @@ $exp_des =test_input($_GET['exp_des']);
      $exp_emp_id =test_input($_GET['exp_emp_id']);
 $exp_id =test_input($_GET['exp_id']);
 
+
+echo "hi";
 echo $exp_des;
 echo $exp_cat;    
 echo $exp_amount;
