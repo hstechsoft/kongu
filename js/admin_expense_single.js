@@ -115,21 +115,27 @@ $('#sel_usr_in').change(function() {
 
   
  $('#submit_exp_btn').click(function () {
+  var exp_data = [];
   if($('#sel_expc_sts_in').find(":selected").val() == "0")
   {
     salert("status","kindly choose status","warning")
     return
   }
   $("#exp_table_single tr").each(function () {
-    console.log($('#sel_expc_sts_in').find(":selected").val())
+    
     var this_row = $(this);
     if(this_row.find('td:eq(5) input:checkbox')[0].checked)
-    update_expense((this_row.find('td:eq(5) input:checkbox')[0].value) , $('#sel_expc_sts_in').find(":selected").val())
+    {
+exp_data.push( this_row.find('td:eq(5) input:checkbox')[0].value)
+    }
+    // update_expense((this_row.find('td:eq(5) input:checkbox')[0].value) , $('#sel_expc_sts_in').find(":selected").val())
 // console.log(this_row.find('td:eq(5) input:checkbox')[0].value)
-else
-console.log("no")
+
 });
-location.reload();
+if(exp_data.length >0)
+{
+  update_expense(exp_data)
+}
   });
 
    });
@@ -166,24 +172,31 @@ location.reload();
   });
  }
 
-   function update_expense(exp_id,exp_approve)
+   function update_expense(exp_id_arr)
    {
 
 
 
 $.ajax({
-  url: "php/update_expense.php",
-  type: "get", //send it through get method
+  url: "php/update_expense_sts.php",
+  type: "POST", //send it through get method
   async : false,
   data: {
-    exp_id : exp_id,
-    exp_approve : exp_approve
+    exp_id_arr :JSON.stringify(exp_id_arr),
+    exp_approve :$('#sel_expc_sts_in').find(":selected").val()
   
 },
   success: function (response) {
 console.log(response)
 
-
+if(response.trim() == "ok")
+{
+  salert("Success","Expense updated successfully","success")
+  get_expense();
+} 
+else{
+  salert("Error","Error in updating expense","error")
+}
  
 
 

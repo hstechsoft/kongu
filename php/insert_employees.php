@@ -11,6 +11,7 @@ $location_url = test_input($_GET['location_url']);
 $employee_login = test_input($_GET['employee_login']);
 $employee_password = test_input($_GET['employee_password']);
 $created_at = test_input($_GET['created_at']);
+$emp_salary = test_input($_GET['emp_salary']);
 
 
  
@@ -24,7 +25,7 @@ return $data;
 }
 
 
- $sql = "INSERT INTO employees ( employee_name,phone,alt_phone,aadhar,voter_id,address,location_url,employee_login,employee_password,created_at) VALUES ($employee_name,$phone,$alt_phone,$aadhar,$voter_id,$address,$location_url,$employee_login,$employee_password,$created_at)";
+ $sql = "INSERT INTO employees ( employee_name,phone,alt_phone,aadhar,voter_id,address,location_url,employee_login,employee_password,created_at,emp_salary) VALUES ($employee_name,$phone,$alt_phone,$aadhar,$voter_id,$address,$location_url,$employee_login,$employee_password,$created_at,$emp_salary)";
 
   if ($conn->query($sql) === TRUE) {
    echo "ok";

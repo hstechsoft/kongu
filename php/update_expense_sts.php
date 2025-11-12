@@ -3,7 +3,9 @@
 
 
 
- $exp_arr = json_decode($_POST['exp_arr'], true);
+ $exp_id_arr = json_decode($_POST['exp_id_arr'], true);
+ $exp_approve = test_input($_POST['exp_approve']);
+
 
 
 function test_input($data) {
@@ -14,13 +16,13 @@ $data = "'".$data."'";
 return $data;
 }
 
-foreach($exp_arr as $exp){
+foreach($exp_id_arr as $exp){
 
-    $exp_id =test_input($exp['exp_id']);
-    $exp_approve =test_input($exp['exp_approve']);
+    $exp_id =($exp);
 
 
-$sql = "UPDATE expense SET  exp_approve =  $exp_approve WHERE exp_id= $exp_id";
+
+$sql = "UPDATE expense SET  exp_approve =  $exp_approve WHERE exp_id= '$exp_id'";
   if ( $conn->query($sql) === TRUE) {
   } 
    else {
