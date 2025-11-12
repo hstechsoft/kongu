@@ -190,7 +190,10 @@ $(document).ready(function () {
         $("#bulk_delete_btn").data("exp_data", "");
         $("#bulk_delete_btn").addClass("d-none");
         $("#bulk_delete_cancel_btn").addClass("d-none");
-
+        $("#exp_category").val("");
+        $("#exp_date").val("");
+        $("#exp_description").val("");
+        $("#exp_amount").val("");
         console.log("Bulk delete canceled");
     });
 
@@ -203,7 +206,10 @@ $(document).ready(function () {
             $(this).addClass("d-none");
             $("#bulk_delete_cancel_btn").addClass("d-none");
 
-
+            $("#exp_category").val("");
+            $("#exp_date").val("");
+            $("#exp_description").val("");
+            $("#exp_amount").val("");
         };
     })
 
