@@ -16,13 +16,13 @@ echo $exp_date;
 echo $exp_emp_id;
 echo $exp_id;
 
-// function test_input($data)
-// {
-//   $data = trim($data);
-//   $data = stripslashes($data);
-//   $data = htmlspecialchars($data);
-//   $data = "'" . $data . "'";
-// }
+function test_input($data)
+{
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  $data = "'" . $data . "'";
+}
 
 
 
