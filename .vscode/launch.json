@@ -27,8 +27,8 @@
       "name": "Launch Chrome for JS/jQuery Debugging",
       "type": "pwa-chrome",
       "request": "launch",
-      "url": "http://localhost/kongu_finance/emp_expense_single.html",
-      "webRoot": "E:/web/htdocs/kongu_finance",
+      "url": "http://localhost/kongu/expense.html",
+      "webRoot": "C:/xampp/htdocs/kongu",
       "userDataDir": true,
   "skipFiles": [
         "**/node_modules/**",
