@@ -172,7 +172,8 @@ address :  $('#address').val(),
 location_url :  $('#location_url').val(),
 employee_login :  $('#employee_login').val(),
 employee_password :  $('#employee_password').val(),
-created_at :  $('#created_at').val()
+created_at :  $('#created_at').val(),
+emp_salary :  $('#employee_salary').val()
 
      },
      success: function (response) {
@@ -220,7 +221,8 @@ location_url :  $('#location_url').val(),
 employee_login :  $('#employee_login').val(),
 employee_password :  $('#employee_password').val(),
 created_at :  $('#created_at').val(),
-id : emp_id
+id : emp_id,
+emp_salary :  $('#employee_salary').val()
 
      },
      success: function (response) {
@@ -276,6 +278,7 @@ shw_toast("success","update successfully")
    
      obj.forEach(function (obj) {
         count = count +1;
+        $("#employee_salary").val(obj.emp_salary)
  $('#employee_name').val(obj.employee_name)
  $('#phone').val(obj.phone)
  $('#alt_phone').val(obj.alt_phone)
