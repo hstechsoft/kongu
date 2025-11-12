@@ -1,7 +1,7 @@
 <?php
  include 'db_head.php';
 
- $emp_id =test_input($_GET['emp_id']);
+
 
 
  function test_input($data) {
@@ -13,7 +13,16 @@
     }
 
     
- $sql = "SELECT * from (SELECT  IFNULL(sum(exp_amount),0)as unapproved  FROM `expense` WHERE exp_approve = 'no' and exp_emp_id = $emp_id) as u , (SELECT  IFNULL(sum(exp_amount),0)as decline  FROM `expense` WHERE exp_approve = 'decline' and exp_emp_id = $emp_id) as decline ";
+ $sql = "SELECT DATE_FORMAT(
+        CONVERT_TZ(NOW(), @@session.time_zone, '+05:30'),
+        '%Y-%m-%d'
+    )  as date,DATE_FORMAT(
+        CONVERT_TZ(NOW(), @@session.time_zone, '+05:30'),
+        '%Y-%m-%d %h:%i:%s %p'
+    )  as date_time,DATE_FORMAT(
+        CONVERT_TZ(NOW(), @@session.time_zone, '+05:30'),
+        '%h:%i:%s %p'
+    )  as time_only";
 
 $result = $conn->query($sql);
 
