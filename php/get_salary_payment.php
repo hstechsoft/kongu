@@ -16,7 +16,7 @@ $data = "'".$data."'";
 return $data;
 }
 
-$sql = "SET time_zone = '+05:30';"; // First query to set the time zone
+$sql = "SET time_zone = '+05:30';";
 $sql .= "SELECT
     SUM(paid_amount) AS total_paid,
     JSON_ARRAYAGG(
@@ -43,16 +43,28 @@ WHERE
     salary_year = $salary_year AND salary_month = $salary_month and emp_id = $emp_id
 GROUP BY
     salary_year,
-    salary_month";
+    salary_month;";
 
-if ($conn->multi_query($sql) === TRUE) {
-    echo "ok";
+if ($conn->multi_query($sql)) {
+    do {
+        if ($result = $conn->store_result()) {
+            if ($result->num_rows > 0) {
+                $rows = array();
+                while ($r = $result->fetch_assoc()) {
+                    $rows[] = $r;
+                }
+                echo json_encode($rows);
+            } else {
+                echo "0 result";
+            }
+            $result->free();
+        }
+    } while ($conn->more_results() && $conn->next_result());
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    echo "Error: " . $conn->error;
 }
+$conn->close();
 
-
-$conn->close();   
 
 
 
