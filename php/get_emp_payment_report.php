@@ -2,6 +2,8 @@
  include 'db_head.php';
 
   $emp_id = test_input($_GET['emp_id']);
+  
+  $paid_date = test_input($_GET['paid_date']);
 
  
  
@@ -15,7 +17,10 @@ return $data;
 
 
 $sql = "SET time_zone = '+05:30';";
-$sql .= "WITH
+
+
+$sql .= <<<SQL
+WITH
     collection_details AS(
     SELECT
         mp.member_id,
@@ -50,7 +55,7 @@ INNER JOIN employees emp ON
 INNER JOIN members mem ON
     mem.id = mp.member_id
 WHERE
-    emp.id =  $emp_id 
+    emp.id =  $emp_id and mp.paid_date <= $paid_date and mp.cash_id is null
 GROUP BY
     paid_date,
     teamid,
@@ -110,7 +115,8 @@ SELECT
 FROM
     cd_final
 RIGHT JOIN emp_pay_full ef ON
-    cd_final.paid_date = ef.pay_date;";
+    cd_final.paid_date = ef.pay_date;
+SQL;
 
 if ($conn->multi_query($sql)) {
     do {

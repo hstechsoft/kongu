@@ -37,9 +37,30 @@ get_employees_dropdown()
 
 $("#employee").on("change", function(event) {
   event.preventDefault();
-  // TODO: handle click here
-  get_emp_payment_report($(this).val())
+  if($("#paid_date").val() !="" && $("#paid_date").val() != null){
+    var emp_id = $("#employee").val()
+    var paid_date = $("#paid_date").val()
+    get_emp_payment_report(emp_id,paid_date)
+      }
 });
+
+$("#paid_date").on("change", function(event) {
+  event.preventDefault();
+
+  console.log($("#employee").val());
+  
+  // TODO: handle click here
+  if($("#employee").val() !="" && $("#employee").val() != null){
+var emp_id = $("#employee").val()
+var paid_date = $("#paid_date").val()
+get_emp_payment_report(emp_id,paid_date)
+  }
+  else{
+    salert("Error", "Please select employee", "error");
+  }
+});
+
+
 
 });
 
@@ -104,7 +125,7 @@ cur_date = obj.cur_date
 
 
 
- function get_emp_payment_report(emp_id)
+ function get_emp_payment_report(emp_id,paid_date)
    {
     
    
@@ -112,7 +133,8 @@ cur_date = obj.cur_date
      url: "php/get_emp_payment_report.php",
      type: "get", //send it through get method
      data: {
-      emp_id :emp_id
+      emp_id :emp_id,
+      paid_date :paid_date  
      },
      success: function (response) {
 
@@ -177,9 +199,12 @@ $('#emp_pay_report').append("<tr class=\"small\"><td>"+count+"</td><td>"+obj.pai
 
 
      });
-   $('#emp_pay_report').append("<tr class=\"small\"><td colspan='4'>"+"Total"+"</td><td colspan='4'>"+grand_total.toFixed(2)+"</td></tr>")
-    $('#emp_pay_report').append("<tr class=\"small\"><td colspan='4'>"+"Expenses"+"</td><td colspan='4'>"+grand_total.toFixed(2)+"</td></tr>")
-     $('#emp_pay_report').append("<tr class=\"small\"><td colspan='4'>"+"Cash In hand"+"</td><td colspan='4'>"+grand_total.toFixed(2)+"</td></tr>")
+  //  $('#emp_pay_report').append("<tr class=\"small\"><td colspan='4'>"+"Total"+"</td><td colspan='4'>"+grand_total.toFixed(2)+"</td></tr>")
+  //   $('#emp_pay_report').append("<tr class=\"small\"><td colspan='4'>"+"Expenses"+"</td><td colspan='4'>"+grand_total.toFixed(2)+"</td></tr>")
+  //    $('#emp_pay_report').append("<tr class=\"small\"><td colspan='4'>"+"Cash In hand"+"</td><td colspan='4'>"+grand_total.toFixed(2)+"</td></tr>")
+
+get_emp_payment_summary(emp_id,paid_date)
+
    }
    else{
    // $("#@id@") .append("<td colspan='0' scope='col'>No Data</td>");
@@ -204,7 +229,47 @@ $('#emp_pay_report').append("<tr class=\"small\"><td>"+count+"</td><td>"+obj.pai
 
 
 
+  function get_emp_payment_summary(emp_id,paid_date)
+   {
+     $.ajax({
+       url: "php/get_emp_payment_summary.php",
+       type: "get", //send it through get method
+       data: {
+         emp_id :emp_id,
+      paid_date :paid_date  
+        
+      
+      },
+       success: function (response) {
+      
+      
+      if (response.trim() != "error") {
+       var obj = JSON.parse(response);
+      
+
+      console.log(response);
+      
+      
+       obj.forEach(function (obj) {
+        // code here
+       });
+      
   
+      }
+      
+      else {
+       salert("Error", "User ", "error");
+      }
+      
+      
+         
+       },
+       error: function (xhr) {
+           //Do Something to handle error
+       }
+      });
+   }
+
 
    
 
