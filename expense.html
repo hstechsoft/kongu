@@ -23,6 +23,19 @@
       background-color: #f4f6f9;
     }
 
+    @media screen and (max-width:768px) {
+
+      table,
+      td,
+      th {
+        font-size: 0.7rem;
+      }
+
+      button {
+        font-size: 0.7rem;
+      }
+    }
+
     .expense-card {
       border: none;
       border-radius: 15px;
@@ -49,7 +62,7 @@
     .expense-name {
       font-weight: 500;
       font-size: 0.9rem;
-      width: 20ch;
+      max-width: 20ch;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -70,11 +83,17 @@
 
     ul.selected .card {
       border: 2px solid #0d6efd;
-      /* Bootstrap primary color (blue) */
       background-color: rgba(13, 110, 253, 0.1);
       box-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
       transform: scale(0.98);
       transition: all 0.2s ease-in-out;
+    }
+
+    #exp_table ul {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
     }
   </style>
 
@@ -151,20 +170,16 @@
 
       </div>
 
-      <div class="card-footer text-center " id="">
-        <button type="submit" class="btn btn-primary " id="exp_report_btn">Report</button>
-      </div>
-
     </div>
 
 
     <div class="row">
       <div class="col-md-6">
         <div class="card mt-5" id="">
-          <div class="card-header text-center">
-            <h2>ADD EXPENSES</h2>
+          <div class="card-header text-center m-0">
+            <h6>ADD EXPENSES</h6>
           </div>
-          <div class="card-body" id="">
+          <div class="card-body m-0 p-0" id="">
             <form class="p-4 border rounded-4 shadow-sm bg-light needs-validation" id="" novalidate
               onsubmit="return false">
 
@@ -199,16 +214,12 @@
                     <textarea class="form-control rounded-3" placeholder="" id="exp_description" required
                       style="height: 120px"></textarea>
                     <label for="exp_description">Description</label>
-                    <span class="text-danger">*</span>
-                    <div class="invalid-feedback">
-                      Kindly Enter Vaild
-                    </div>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating mb-2">
-                    <input type="text" class="form-control rounded-3" id="exp_amount" placeholder="" required>
+                    <input type="number" class="form-control rounded-3" id="exp_amount" placeholder="" required>
                     <label for="exp_amount">Amount
                       <span class="text-danger">*</span> </label>
 
@@ -243,7 +254,7 @@
 
           <div class="card-body" id="">
             <div class="text-center d-flex justify-content-between mt-3">
-              <button id="bulk_delete_btn" class="btn btn-danger d-none">Delete Selected</button>
+              <button id="bulk_delete_btn" class="btn btn-danger d-none"><i class="fa fa-trash"></i></button>
               <button id="bulk_delete_cancel_btn" class="btn btn-close d-none"></button>
             </div>
             <ul class="list-group" id="exp_table">
