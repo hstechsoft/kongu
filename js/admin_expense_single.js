@@ -110,6 +110,7 @@ $(document).ready(function () {
     $("#salary_form").removeClass("d-none")
     $("#expense_form").addClass("d-none")
     $("#team_form").addClass("d-none")
+    get_salary_payment("1", $("#salary_year").val())
   })
 
   $("#salary_add_btn").on("click", function () {
@@ -134,6 +135,17 @@ $(document).ready(function () {
     }
   })
 
+  $("#salary_table").on("click", ".fa-edit", function () {
+    alert()
+    var row = $(this).closest("tr");
+
+
+
+    // $("#salary_amount").val(row.find(".bcard1 strong").eq(0).text());
+    // $("#salary_mode").val(row.find(".bcard2 p").eq(0).text());
+    // $("#salary_ref_no").val(row.find(".bcard2 p").eq(1).text());
+    // $("#salary_advance").addClass(row.find(".card").data("sel_adv"));
+  })
 
 
   $("#expense_btn").on("click", function () {
@@ -149,20 +161,105 @@ $(document).ready(function () {
     }
     else {
       insert_expense_payment({
-        paid_date: $("#salary_date").val(),
+        paid_date: $("#exp_date").val(),
         emp_id: current_user_id,
-        paid_amount: $("#salary_amount").val(),
-        pay_mode: $("#salary_mode").val(),
+        paid_amount: $("#exp_paid_amount").val(),
+        pay_mode: $("#exp_mode").val(),
         paid_by: emp_id,
       });
     }
   })
+  $("#expense_tbody").on("click", ".fa-edit", function () {
+
+    var row = $(this).closest("tr");
+
+    $("#exp_paid_amount").val(row.find("td").eq(1).text());
+    $("#exp_mode").val(row.find("td").eq(2).text());
+    // $("#exp_ref_no").val(row.find("td").eq(1).text());
+    $("#exp_date").val(row.find("td").eq(4).text());
+    $("#exp_update_btn").data("paid_id", row.data("paid_id"));
+
+    $("#exp_add_btn").addClass("d-none");
+    $("#exp_update_btn").removeClass("d-none");
+
+  })
+  $("#exp_update_btn").on("click", function () {
+    if ($(this).data("paid_id") == '' || $("#exp_paid_amount").val() == '' || $("#exp_mode").val() == '' || $("#exp_ref_no").val() == '' || $("#exp_date").val() == '') {
+
+      salert("warning", "All the fields are required", "warning")
+    }
+    else {
+      update_expense_payment({
+        paid_date: $("#exp_date").val(),
+        emp_id: current_user_id,
+        paid_amount: $("#exp_paid_amount").val(),
+        pay_mode: $("#exp_mode").val(),
+        paid_by: emp_id,
+        paid_id: $(this).data("paid_id"),
+      });
+    }
+  })
+
+
+
   $("#team_btn").on("click", function () {
     $("#team_form").removeClass("d-none")
     $("#salary_form").addClass("d-none")
     $("#expense_form").addClass("d-none")
+    get_team_payment();
+  })
+
+  $("#team_add_btn").on("click", function () {
+
+    if ($("#team_paid_amount").val() == '' || $("#team_mode").val() == '' || $("#team_ref_no").val() == '' || $("#team_date").val() == '') {
+
+      salert("warning", "All the fields are required", "warning")
+    }
+    else {
+      insert_team_payment({
+        dated: $("#team_date").val(),
+        emp_id: current_user_id,
+        amount: $("#team_paid_amount").val(),
+        pay_mode: $("#team_mode").val(),
+        paid_by: emp_id,
+        ref_no: $("#team_ref_no").val(),
+      });
+    }
+  })
+    $("#team_tbody").on("click", ".fa-edit", function () {
+
+    var row = $(this).closest("tr");
+
+    $("#team_paid_amount").val(row.find("td").eq(1).text());
+    $("#team_mode").val(row.find("td").eq(2).text());
+    $("#team_ref_no").val(row.find("td").eq(3).text());
+    $("#team_date").val(row.find("td").eq(4).text());
+    $("#team_update_btn").data("team_pay", row.data("team_pay"));
+
+    $("#team_add_btn").addClass("d-none");
+    $("#team_update_btn").removeClass("d-none");
 
   })
+    $("#team_update_btn").on("click", function () {
+    if ($(this).data("team_pay") == '' || $("#team_paid_amount").val() == '' || $("#team_mode").val() == '' || $("#team_ref_no").val() == '' || $("#team_date").val() == '') {
+
+      salert("warning", "All the fields are required", "warning")
+    }
+    else {
+      update_team_payment({
+        dated: $("#team_date").val(),
+        emp_id: current_user_id,
+        amount: $("#team_paid_amount").val(),
+        pay_mode: $("#team_mode").val(),
+        ref_no: $("#team_ref_no").val(),
+        paid_by: emp_id,
+        team_pay: $(this).data("team_pay"),
+      });
+    }
+  })
+
+
+
 
   $('#submit_emp_btn').click(function () {
     insert_emp_pay();
@@ -196,6 +293,8 @@ $(document).ready(function () {
 
 function insert_salary_payment(data) {
 
+  let m = $("#salary_month").val();
+  let y = $("#salary_year").val();
 
   $.ajax({
     url: "php/insert_salary_payment.php",
@@ -204,8 +303,80 @@ function insert_salary_payment(data) {
     success: function (response) {
       console.log(response)
 
-      if (response == "ok") {
-        alert()
+      if (response.trim() == "ok") {
+
+        get_salary_payment(m, y)
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+function get_salary_payment(month, year) {
+  console.log(current_user_id, month, year);
+
+
+  $.ajax({
+    url: "php/get_salary_payment.php",
+    type: "get", //send it through get method
+    data: {
+      salary_month: month,
+      salary_year: year,
+      emp_id: current_user_id,
+    },
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() !== "error") {
+
+        $("#salary_table").empty();
+
+        if (response.trim() !== "0 result") {
+
+          var count = 0;
+          var obj = JSON.parse(response);
+
+          obj.forEach(function (item) {
+
+            count += 1;
+            var full_data = '';
+            var data = JSON.parse(item.pay_details);
+
+            if (data != "null") {
+
+              data.forEach(function (dets) {
+                var advance = ""
+                var select = ""
+
+                if (dets.is_advance == "1") {
+                  advance = "<i class='fa fa-money-bill'></i>";
+                  select = "checked";
+                }
+
+                full_data = `<div class="card  data-sel_adv=${select}" id="card">
+                              <div class="card-body">
+                                <div class="d-flex justify-content-between" id="bcard1">
+                                  <p>${dets.dated}</p><p>${dets.pay_mode}</p>${advance}
+                                </div>
+                                <div class="d-flex justify-content-between" id="bcard2">
+                                  <strong class="text-success">₹${dets.paid_amount}</strong><p>${dets.ref_no}</p>
+                                </div>
+                              </div>
+                            </div>`;
+              })
+            }
+
+            $("#salary_table").append(`<tr><td>${count}</td><td>${full_data}</td><td>₹${item.total_paid}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
+          })
+        }
+        else {
+          salert("Error", "User ", "error");
+        }
       }
       // location.reload();
 
@@ -218,6 +389,7 @@ function insert_salary_payment(data) {
   });
 }
 
+
 function insert_expense_payment(data) {
 
 
@@ -228,7 +400,7 @@ function insert_expense_payment(data) {
     success: function (response) {
       console.log(response)
 
-      if (response == "ok") {
+      if (response.trim() == "ok") {
         get_expense_payment()
       }
       // location.reload();
@@ -241,6 +413,31 @@ function insert_expense_payment(data) {
     }
   });
 }
+
+function update_expense_payment(data) {
+
+
+  $.ajax({
+    url: "php/update_expense_payment.php",
+    type: "get", //send it through get method
+    data: data,
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() == "ok") {
+        get_expense_payment()
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
 function get_expense_payment() {
   console.log(current_user_id);
 
@@ -256,12 +453,105 @@ function get_expense_payment() {
 
       if (response.trim() !== "error") {
 
+        $("#expense_tbody").empty();
+
         if (response.trim() !== "0 result") {
           var count = 0;
           var obj = JSON.parse(response);
           obj.forEach(function (item) {
             count += 1;
-            $("#expense_tbody").append(`<tr><td>${count}</td><td>${item.paid_amount}</td><td>${item.pay_mode}</td><td>illa</td><td>${obj.paid_date}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
+            var date = item.paid_date.split(" ")
+            $("#expense_tbody").append(`<tr data-paid_id='${item.paid_id}'><td>${count}</td><td>${item.paid_amount}</td><td>${item.pay_mode}</td><td>illa</td><td>${date[0]}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
+          })
+        }
+        else {
+          salert("Error", "User ", "error");
+        }
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
+
+function insert_team_payment(data) {
+
+
+  $.ajax({
+    url: "php/insert_team_payment.php",
+    type: "get", //send it through get method
+    data: data,
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() == "ok") {
+        get_team_payment()
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
+function update_team_payment(data) {
+
+
+  $.ajax({
+    url: "php/update_team_payment.php",
+    type: "get", //send it through get method
+    data: data,
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() == "ok") {
+        get_team_payment()
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
+function get_team_payment() {
+  console.log(current_user_id);
+
+
+  $.ajax({
+    url: "php/get_team_payment.php",
+    type: "get", //send it through get method
+    data: {
+      emp_id: current_user_id,
+    },
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() !== "error") {
+
+        $("#team_tbody").empty();
+
+        if (response.trim() !== "0 result") {
+          var count = 0;
+          var obj = JSON.parse(response);
+          obj.forEach(function (item) {
+            count += 1;
+            var date = item.dated.split(" ")
+            $("#team_tbody").append(`<tr data-team_pay='${item.team_pay}'><td>${count}</td><td>${item.amount}</td><td>${item.pay_mode}</td><td>${item.ref_no}</td><td>${date[0]}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
           })
         }
         else {

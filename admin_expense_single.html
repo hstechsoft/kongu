@@ -220,7 +220,7 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary " id="salary_add_btn">OK</button>
+                  <button type="reset" class="btn btn-primary " id="salary_add_btn">OK</button>
                 </div>
               </form>
 
@@ -230,9 +230,11 @@
                   <thead>
 
                     <tr>
+                      
                       <th scope="col">#</th>
                       <th scope="col">Salary</th>
                       <th scope="col">Total</th>
+                      <th scope="col">Action</th>
 
                     </tr>
                   </thead>
@@ -314,7 +316,8 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary " id="exp_add_btn">OK</button>
+                  <button type="reset" class="btn btn-primary " id="exp_add_btn">OK</button>
+                  <button type="reset" class="btn btn-primary d-none" id="exp_update_btn">Update</button>
                 </div>
 
               </form>
@@ -342,7 +345,7 @@
 
                 </table>
               </div>
-              
+
             </div>
 
 
@@ -412,12 +415,35 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary " id="team_add_btn">OK</button>
+                  <button type="reset" class="btn btn-primary " id="team_add_btn">OK</button>
+                  <button type="reset" class="btn btn-primary d-none" id="team_update_btn">Update</button>
                 </div>
 
               </form>
 
+              <div class="table-responsive">
+                <table class="table caption-top table-bordered table-striped ">
+                  <caption></caption>
+                  <thead>
 
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Mode</th>
+                      <th scope="col">Ref No</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Action</th>
+
+                    </tr>
+                  </thead>
+                  <tbody id="team_tbody">
+
+
+                  </tbody>
+
+
+                </table>
+              </div>
 
             </div>
 
