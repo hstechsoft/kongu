@@ -19,7 +19,7 @@ $sql .= "SELECT
     SUM(paid_amount) AS total,
     payment_mode
 FROM memberspayment
-WHERE emp_id = 20 AND cash_id IS NULL
+WHERE emp_id = $emp_id AND cash_id IS NULL
 GROUP BY payment_mode
 
 UNION ALL
@@ -28,9 +28,9 @@ SELECT
     amount AS total,
     'in_hand' AS payment_mode
 FROM employee_cash
-WHERE emp_id = 20
+WHERE emp_id =  $emp_id
   AND cash_id = (
-      SELECT MAX(cash_id) FROM employee_cash WHERE emp_id = 20
+      SELECT MAX(cash_id) FROM employee_cash WHERE emp_id = $emp_id
   );
 ";
 
