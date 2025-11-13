@@ -1,12 +1,8 @@
 <?php
  include 'db_head.php';
 
- $emp_id = test_input($_GET['emp_id']);
-$amount = test_input($_GET['amount']);
-$dated = test_input($_GET['dated']);
-$pay_mode = test_input($_GET['pay_mode']);
-$ref_no = test_input($_GET['ref_no']);
-$paid_by = test_input($_GET['paid_by']);
+
+$team_pay = test_input($_GET['team_pay']);
 
 
  

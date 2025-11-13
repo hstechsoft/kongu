@@ -1,11 +1,7 @@
 <?php
  include 'db_head.php';
 
- $paid_date = test_input($_GET['paid_date']);
-$emp_id = test_input($_GET['emp_id']);
-$paid_amount = test_input($_GET['paid_amount']);
-$pay_mode = test_input($_GET['pay_mode']);
-$paid_by = test_input($_GET['paid_by']);
+
 $paid_id = test_input($_GET['paid_id']);
 
 
