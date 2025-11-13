@@ -1,19 +1,16 @@
-
-
-
 var cus_id = '0';
 var urlParams = new URLSearchParams(window.location.search);
 var current_user_id = localStorage.getItem("ls_uid");
 var emp_id = urlParams.get('emp_id');
 var his_query = "SELECT * FROM expense_payment   where emp_id=" + emp_id
-var query_exp = "SELECT * FROM expense inner join employees on employees.id = expense.exp_emp_id where exp_emp_id=" + emp_id
-var bnt_val = 0;
+var query_exp = "SELECT * FROM expense inner join employees on employees.id = expense.exp_emp_id where exp_emp_id=" + emp_id;
 $(document).ready(function () {
 
   check_login();
   get_expense();
   get_payment_history();
   get_employee();
+  get_current_time();
 
   $("#unamed").text(localStorage.getItem("ls_uname"))
 
@@ -106,16 +103,24 @@ $(document).ready(function () {
     $('#emp_pay_model').modal('show');
   });
 
+
+  $("#salary_month").on("input", function () {
+
+    get_salary_payment($(this).val(), $("#salary_year").val())
+  })
   $("#salary_btn").on("click", function () {
     $("#salary_form").removeClass("d-none")
     $("#expense_form").addClass("d-none")
     $("#team_form").addClass("d-none")
-    get_salary_payment("1", $("#salary_year").val())
+
+    $("#exp_add_btn").trigger()
+    $("#team_add_btn").trigger()
+
   })
 
   $("#salary_add_btn").on("click", function () {
     let salary_advance = $("#salary_advance").is(":checked") ? "1" : "0";
-    if ($("#salary_year").val() == '' || $("#salary_month").val() == '' || $("#salary_amount").val() == '' || $("#salary_mode").val() == '' || $("#salary_ref_no").val() == '' || $("#salary_date").val() == '') {
+    if ($("#salary_year").val() == '' || $("#salary_month").val() == null || $("#salary_amount").val() == '' || $("#salary_mode").val() == null || $("#salary_ref_no").val() == '' || $("#salary_date").val() == '') {
 
       salert("warning", "All the fields are required", "warning")
     }
@@ -126,9 +131,9 @@ $(document).ready(function () {
         pay_mode: $("#salary_mode").val(),
         ref_no: $("#salary_ref_no").val(),
         is_advance: salary_advance,
-        emp_id: current_user_id,
+        emp_id: emp_id,
         month: $("#salary_month").val(),
-        paid_by: emp_id,
+        paid_by: current_user_id,
         salary_year: $("#salary_year").val(),
         salary_month: $("#salary_month").val(),
       });
@@ -152,20 +157,25 @@ $(document).ready(function () {
     $("#expense_form").removeClass("d-none")
     $("#salary_form").addClass("d-none")
     $("#team_form").addClass("d-none")
+
     get_expense_payment();
+    
+    $("#salary_add_btn").trigger()
+    $("#team_add_btn").trigger()
+
   })
   $("#exp_add_btn").on("click", function () {
-    if ($("#exp_paid_amount").val() == '' || $("#exp_mode").val() == '' || $("#exp_ref_no").val() == '' || $("#exp_date").val() == '') {
+    if ($("#exp_paid_amount").val() == '' || $("#exp_mode").val() == null || $("#exp_date").val() == '') {
 
       salert("warning", "All the fields are required", "warning")
     }
     else {
       insert_expense_payment({
         paid_date: $("#exp_date").val(),
-        emp_id: current_user_id,
+        emp_id: emp_id,
         paid_amount: $("#exp_paid_amount").val(),
         pay_mode: $("#exp_mode").val(),
-        paid_by: emp_id,
+        paid_by: current_user_id,
       });
     }
   })
@@ -184,17 +194,17 @@ $(document).ready(function () {
 
   })
   $("#exp_update_btn").on("click", function () {
-    if ($(this).data("paid_id") == '' || $("#exp_paid_amount").val() == '' || $("#exp_mode").val() == '' || $("#exp_ref_no").val() == '' || $("#exp_date").val() == '') {
+    if ($(this).data("paid_id") == '' || $("#exp_paid_amount").val() == '' || $("#exp_mode").val() == null || $("#exp_date").val() == '') {
 
       salert("warning", "All the fields are required", "warning")
     }
     else {
       update_expense_payment({
         paid_date: $("#exp_date").val(),
-        emp_id: current_user_id,
+        emp_id: emp_id,
         paid_amount: $("#exp_paid_amount").val(),
         pay_mode: $("#exp_mode").val(),
-        paid_by: emp_id,
+        paid_by: current_user_id,
         paid_id: $(this).data("paid_id"),
       });
     }
@@ -206,27 +216,32 @@ $(document).ready(function () {
     $("#team_form").removeClass("d-none")
     $("#salary_form").addClass("d-none")
     $("#expense_form").addClass("d-none")
+
     get_team_payment();
+
+    $("#salary_add_btn").trigger()
+    $("#exp_add_btn").trigger()
+
   })
 
   $("#team_add_btn").on("click", function () {
 
-    if ($("#team_paid_amount").val() == '' || $("#team_mode").val() == '' || $("#team_ref_no").val() == '' || $("#team_date").val() == '') {
+    if ($("#team_paid_amount").val() == '' || $("#team_mode").val() == null || $("#team_ref_no").val() == '' || $("#team_date").val() == '') {
 
       salert("warning", "All the fields are required", "warning")
     }
     else {
       insert_team_payment({
         dated: $("#team_date").val(),
-        emp_id: current_user_id,
+        emp_id: emp_id,
         amount: $("#team_paid_amount").val(),
         pay_mode: $("#team_mode").val(),
-        paid_by: emp_id,
+        paid_by: current_user_id,
         ref_no: $("#team_ref_no").val(),
       });
     }
   })
-    $("#team_tbody").on("click", ".fa-edit", function () {
+  $("#team_tbody").on("click", ".fa-edit", function () {
 
     var row = $(this).closest("tr");
 
@@ -240,19 +255,19 @@ $(document).ready(function () {
     $("#team_update_btn").removeClass("d-none");
 
   })
-    $("#team_update_btn").on("click", function () {
-    if ($(this).data("team_pay") == '' || $("#team_paid_amount").val() == '' || $("#team_mode").val() == '' || $("#team_ref_no").val() == '' || $("#team_date").val() == '') {
+  $("#team_update_btn").on("click", function () {
+    if ($(this).data("team_pay") == '' || $("#team_paid_amount").val() == '' || $("#team_mode").val() == null || $("#team_ref_no").val() == '' || $("#team_date").val() == '') {
 
       salert("warning", "All the fields are required", "warning")
     }
     else {
       update_team_payment({
         dated: $("#team_date").val(),
-        emp_id: current_user_id,
+        emp_id: emp_id,
         amount: $("#team_paid_amount").val(),
         pay_mode: $("#team_mode").val(),
         ref_no: $("#team_ref_no").val(),
-        paid_by: emp_id,
+        paid_by: current_user_id,
         team_pay: $(this).data("team_pay"),
       });
     }
@@ -318,7 +333,7 @@ function insert_salary_payment(data) {
   });
 }
 function get_salary_payment(month, year) {
-  console.log(current_user_id, month, year);
+  console.log(emp_id, month, year);
 
 
   $.ajax({
@@ -327,7 +342,7 @@ function get_salary_payment(month, year) {
     data: {
       salary_month: month,
       salary_year: year,
-      emp_id: current_user_id,
+      emp_id: emp_id,
     },
     success: function (response) {
       console.log(response)
@@ -439,7 +454,7 @@ function update_expense_payment(data) {
 }
 
 function get_expense_payment() {
-  console.log(current_user_id);
+  console.log(emp_id);
 
 
   $.ajax({
@@ -529,14 +544,13 @@ function update_team_payment(data) {
 }
 
 function get_team_payment() {
-  console.log(current_user_id);
-
+  console.log(emp_id);
 
   $.ajax({
     url: "php/get_team_payment.php",
     type: "get", //send it through get method
     data: {
-      emp_id: current_user_id,
+      emp_id: emp_id,
     },
     success: function (response) {
       console.log(response)
@@ -555,7 +569,7 @@ function get_team_payment() {
           })
         }
         else {
-          salert("Error", "User ", "error");
+          // salert("Error", "User ", "error");
         }
       }
       // location.reload();
@@ -564,7 +578,7 @@ function get_team_payment() {
 
     },
     error: function (xhr) {
-      //Do Something to handle error
+      salert("Error", "User ", "error");
     }
   });
 }
@@ -705,8 +719,8 @@ function get_expense() {
     },
     success: function (response) {
       console.log(response)
-      $("#exp_table_single").empty();
       if (response.trim() != "error") {
+        $("#exp_table_single").empty();
         if (response.trim() != "0 result") {
           var obj = JSON.parse(response);
 
@@ -763,8 +777,8 @@ function get_payment_history() {
     },
     success: function (response) {
       console.log(response)
-      $("#exp_payment_tbl").empty();
       if (response.trim() != "error") {
+        $("#exp_payment_tbl").empty();
         if (response.trim() != "0 result") {
           var obj = JSON.parse(response);
 
@@ -804,6 +818,51 @@ function get_payment_history() {
   });
 
 }
+
+function get_current_time() {
+  $.ajax({
+    url: "php/get_current_time.php",
+    type: "get", //send it through get method
+    data: {
+
+
+    },
+    success: function (response) {
+
+
+      if (response.trim() != "error") {
+
+        if (response.trim() != "0 result") {
+          $("#Summary_tbody").empty()
+          var obj = JSON.parse(response);
+
+          console.log(response);
+
+          obj.forEach(function (obj) {
+
+            $("#salary_date").val(obj.date)
+            $("#exp_date").val(obj.date)
+            $("#team_date").val(obj.date)
+
+
+          });
+        }
+
+      }
+
+      else {
+        salert("Error", "User ", "error");
+      }
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
 
 function get_millis(t) {
 

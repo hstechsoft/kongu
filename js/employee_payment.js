@@ -30,7 +30,6 @@ $(document).ready(function () {
 
   $("#unamed").text(localStorage.getItem("ls_uname"))
 
-
   get_employees_dropdown()
 
   $("#employee").on("change", function (event) {
@@ -58,6 +57,18 @@ $(document).ready(function () {
     }
   });
 
+  $("#emp_payment_btn").on("click", function () {
+
+    if ($("#employee").val() == null || $("#paid_date").val() == '' || $("#emp_amount").val() == '' || $("#pay_mode").val() == null || $("#ref_no").val() == '') {
+      salert("Warning", "All fields are required", "warning");
+      return;
+    }
+
+    var emp_pay_arr = { pay_mode: $("#pay_mode").val(), pay_amount: $("#emp_amount").val(), pay_date: $("#paid_date").val(), reference: ("#ref_no").val(), }
+    insert_emp_payment(emp_pay_arr)
+
+
+  })
 
 
 });
@@ -117,6 +128,44 @@ function get_employees_dropdown() {
 
 
 }
+
+
+function insert_emp_payment(data) {
+
+
+  $.ajax({
+    url: "php/insert_emp_payment.php",
+    type: "get", //send it through get method
+    data: {
+      emp_pay_arr: data
+    },
+    success: function (response) {
+
+
+      if (response.trim() == "ok") {
+
+        alert('success')
+
+      }
+      else {
+        salert("Error", "Error while insert", "error")
+      }
+
+
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+
+
+
+
+}
+
 
 
 
@@ -235,16 +284,22 @@ function get_emp_payment_summary(emp_id, paid_date) {
 
 
       if (response.trim() != "error") {
-        var obj = JSON.parse(response);
 
+        if (response.trim() != "0 result") {
+          $("#Summary_tbody").empty()
+          var obj = JSON.parse(response);
 
-        console.log(response);
+          var count = 0;
+          var grand_total = 0;
+          console.log(response);
 
-
-        obj.forEach(function (obj) {
-          // code here
-        });
-
+          obj.forEach(function (obj) {
+            count += 1;
+            grand_total += parseInt(obj.total) || 0;
+            $("#Summary_tbody").append(`<tr><td>${count}</td><td>${obj.payment_mode}</td><td>₹${obj.total}</td><td></td></tr>`)
+          });
+          $("#Summary_tbody").append(`<tr><td class="text-center" colspan="2">Total</td><td class="fw-bold text-success">₹${grand_total}</td><td></td></tr>`);
+        }
 
       }
 
