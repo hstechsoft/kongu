@@ -27,11 +27,11 @@ if ($conn->multi_query($sql_insert) === TRUE) {
     foreach($emp_pay_arr as $emp_pay){
     $pay_mode =test_input($emp_pay['pay_mode']);
     $pay_amount =test_input($emp_pay['pay_amount']);
-    $pay_date =test_input($emp_pay['pay_date']);
+   
     $reference =test_input($emp_pay['reference']);
   
 
-$sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, reference, received_by,cash_id) VALUES ( $pay_mode, $pay_amount,  $pay_date, $emp_id,   $reference, $received_by, $cash_id)";
+$sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, reference, received_by,cash_id) VALUES ( $pay_mode, $pay_amount,  $paid_date, $emp_id,   $reference, $received_by, $cash_id)";
   
   if ($conn->query($sql) === TRUE) {
    
