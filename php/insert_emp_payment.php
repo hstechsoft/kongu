@@ -54,7 +54,7 @@ $sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, referen
 }
 
 
- $sql_update =  "UPDATE memberspayment SET cash_id = ' WHERE emp_id = $emp_id and paid_date <= $paid_date and cash_id is null";
+ $sql_update =  "UPDATE memberspayment SET cash_id = $cash_id WHERE emp_id = $emp_id and paid_date <= $paid_date and cash_id is null";
 
   if ($conn->query($sql_update) === TRUE) {
    echo "ok";
