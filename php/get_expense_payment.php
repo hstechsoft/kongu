@@ -15,7 +15,7 @@ return $data;
 }
 
 
- $sql = "SELECT expense_payment.*,DATE_FORMAT(paid_date, '%d-%m-%Y')as formatted_date FROM expense_payment WHERE emp_id =  $emp_id";
+ $sql = "SELECT expense_payment.*,DATE_FORMAT(paid_date, '%Y-%m-%d')as formatted_date FROM expense_payment WHERE emp_id =  $emp_id";
 
 $result = $conn->query($sql);
 
