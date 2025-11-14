@@ -39,14 +39,14 @@ if ($conn->multi_query($sql_insert) === TRUE) {
    
     $reference =test_input($emp_pay['reference']);
   
-
-$sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, reference, received_by,cash_id) VALUES ( $pay_mode, $pay_amount,  $paid_date, $emp_id,   $reference, $received_by, $cash_id)";
+echo $pay_mode.$pay_amount. $paid_date.$emp_id.  $reference.$received_by.$cash_id;
+// $sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, reference, received_by,cash_id) VALUES ( $pay_mode, $pay_amount,  $paid_date, $emp_id,   $reference, $received_by, $cash_id)";
   
-  if ($conn->query($sql) === TRUE) {
+//   if ($conn->query($sql) === TRUE) {
    
-  } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-  }
+//   } else {
+//     echo "Error: " . $sql . "<br>" . $conn->error;
+//   }
 
   
 }
