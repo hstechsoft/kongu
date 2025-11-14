@@ -25,7 +25,7 @@ $sql .= "SELECT
             salary_pay_id,
             'paid_amount',
             `paid_amount`,
-            'dated-format',
+            'dated_format',
            DATE_FORMAT(dated, '%d-%m-%Y'),
              'dated',
           dated,
