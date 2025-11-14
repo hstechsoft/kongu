@@ -26,7 +26,7 @@ $sql .= "SELECT
             'paid_amount',
             `paid_amount`,
             'dated-format',
-            date_only(dated),
+           DATE_FORMAT(dated, '%d-%m-%Y'),
              'dated',
           dated,
             'pay_mode',
