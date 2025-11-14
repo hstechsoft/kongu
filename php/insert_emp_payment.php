@@ -24,6 +24,15 @@ $sql_insert .= "INSERT INTO employee_cash (amount, dated,emp_id) VALUES ( $cash_
 if ($conn->multi_query($sql_insert) === TRUE) {
     $cash_id = $conn->insert_id;
 
+
+
+
+ 
+} else {
+    echo "Error: " . $sql_insert . "<br>" . $conn->error;
+}
+
+
     foreach($emp_pay_arr as $emp_pay){
     $pay_mode =test_input($emp_pay['pay_mode']);
     $pay_amount =test_input($emp_pay['pay_amount']);
@@ -43,8 +52,6 @@ $sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, referen
 }
 
 
-
-
  $sql_update =  "UPDATE memberspayment SET cash_id = ' WHERE emp_id = $emp_id and paid_date <= $paid_date and cash_id is null";
 
   if ($conn->query($sql_update) === TRUE) {
@@ -52,13 +59,6 @@ $sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, referen
   } else {
     echo "Error: " . $sql_update . "<br>" . $conn->error;
   }
- 
-} else {
-    echo "Error: " . $sql_insert . "<br>" . $conn->error;
-}
-
-
-
 
 
 
