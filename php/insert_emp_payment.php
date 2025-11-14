@@ -17,21 +17,23 @@ $data = htmlspecialchars($data);
 $data = "'".$data."'";
 return $data;
 }
+
+if (!$conn->query("SET time_zone = '+05:30'")) {
+    echo "Error setting timezone: " . $conn->error;
+    $conn->close();
+    exit;
+}
  $cash_id = 0;
-$sql_insert = "SET time_zone = '+05:30';"; // First query to set the time zone
-$sql_insert .= "INSERT INTO employee_cash (amount, dated,emp_id) VALUES ( $cash_remain, $paid_date,$emp_id)";
-// 
-if ($conn->multi_query($sql_insert) === TRUE) {
+$sql_insert = "INSERT INTO employee_cash (amount, dated, emp_id)
+               VALUES ($cash_remain, $paid_date, $emp_id)";
+
+if ($conn->query($sql_insert) === TRUE) {
     $cash_id = $conn->insert_id;
-
-
-
-
- 
 } else {
     echo "Error: " . $sql_insert . "<br>" . $conn->error;
+    $conn->close();
+    exit;
 }
-
 
     foreach($emp_pay_arr as $emp_pay){
     $pay_mode =test_input($emp_pay['pay_mode']);
@@ -39,14 +41,14 @@ if ($conn->multi_query($sql_insert) === TRUE) {
    
     $reference =test_input($emp_pay['reference']);
   
-echo $pay_mode.$pay_amount. $paid_date.$emp_id.  $reference.$received_by.$cash_id;
-// $sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, reference, received_by,cash_id) VALUES ( $pay_mode, $pay_amount,  $paid_date, $emp_id,   $reference, $received_by, $cash_id)";
+// echo $pay_mode.$pay_amount. $paid_date.$emp_id.  $reference.$received_by.$cash_id;
+$sql = "INSERT INTO emp_payment (pay_mode, pay_amount, pay_date, emp_id, reference, received_by,cash_id) VALUES ( $pay_mode, $pay_amount,  $paid_date, $emp_id,   $reference, $received_by, $cash_id)";
   
-//   if ($conn->query($sql) === TRUE) {
+  if ($conn->query($sql) === TRUE) {
    
-//   } else {
-//     echo "Error: " . $sql . "<br>" . $conn->error;
-//   }
+  } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
 
   
 }
