@@ -4,6 +4,7 @@ var phone_id = urlParams.get('phone_id');
 var current_user_id = localStorage.getItem("ls_uid");
 var current_user_name = localStorage.getItem("ls_uname");
 var physical_stock_array = [];
+var emp_id = ''
 $(document).ready(function () {
 
 
@@ -35,7 +36,7 @@ $(document).ready(function () {
   $("#employee").on("change", function (event) {
     event.preventDefault();
     if ($("#paid_date").val() != "" && $("#paid_date").val() != null) {
-      var emp_id = $("#employee").val()
+      emp_id = $("#employee").val()
       var paid_date = $("#paid_date").val()
       get_emp_payment_report(emp_id, paid_date)
     }
@@ -48,7 +49,7 @@ $(document).ready(function () {
 
     // TODO: handle click here
     if ($("#employee").val() != "" && $("#employee").val() != null) {
-      var emp_id = $("#employee").val()
+      emp_id = $("#employee").val()
       var paid_date = $("#paid_date").val()
       get_emp_payment_report(emp_id, paid_date)
     }
@@ -57,16 +58,110 @@ $(document).ready(function () {
     }
   });
 
-  $("#emp_payment_btn").on("click", function () {
+  let enter_total = 0;
 
-    if ($("#employee").val() == null || $("#paid_date").val() == '' || $("#emp_amount").val() == '' || $("#pay_mode").val() == null || $("#ref_no").val() == '') {
+
+  $("#emp_payment_add_btn").on("click", function () {
+
+
+    if (
+      $("#employee").val() == null ||
+      $("#paid_date").val() == '' ||
+      $("#emp_amount").val() == '' ||
+      $("#pay_mode").val() == null ||
+      $("#ref_no").val() == ''
+    ) {
       salert("Warning", "All fields are required", "warning");
       return;
     }
 
-    var emp_pay_arr = { pay_mode: $("#pay_mode").val(), pay_amount: $("#emp_amount").val(), pay_date: $("#paid_date").val(), reference: ("#ref_no").val(), }
-    insert_emp_payment(emp_pay_arr)
+    let found = false;
+    let payMode = $("#pay_mode").val();
+    let empAmount = $("#emp_amount").val();
+    let refNo = $("#ref_no").val();
+    let paidDate = $("#paid_date").val();
+    let count = 0;
+    let final_total = $("#Summary_tbody tr:last").find("td").eq(1).text().trim();
+    final_total = final_total.replace(/[^0-9.-]/g, '')
 
+    console.log(final_total);
+
+
+
+    let rows = $("#Summary_tbody tr");
+    rows.slice(0, -1).each(function () {
+      count++;
+      let pay_type = $(this).find("td").eq(1).text().trim();
+
+      if (pay_type === payMode) {
+        enter_total += parseFloat($("#emp_amount").val());
+        let rev_details = `
+        <ul class='list-group'>
+          <li class='list-group-item'>
+            <p id="p1">${payMode}</p> <strong class="text-success">₹${empAmount}</strong><br> <p id="p2">${refNo}</p> ${paidDate}
+          </li>
+        </ul>`;
+        $(this).find("td").eq(3).append(rev_details);
+        found = true;
+        return false;
+      }
+    });
+
+
+    if (!found) {
+      count += 1;
+      enter_total += parseFloat($("#emp_amount").val());
+      let newRow = `
+      <tr>
+        <td>${count}</td>
+        <td>${payMode}</td>
+        <td></td>
+        <td>
+          <ul class='list-group'>
+            <li class='list-group-item'>
+              <p id="p1">${payMode}</p> <strong class="text-success">₹${empAmount}</strong><br> <p id="p2">${refNo}</p> ${paidDate}
+            </li>
+          </ul>
+        </td>
+      </tr>
+    `;
+      $(newRow).insertBefore(rows.last());
+    }
+    final_total = final_total - enter_total;
+
+    $("#Summary_tbody tr:last").find("td").eq(2).html(`<strong class="text-danger">₹${final_total}</strong>`);
+
+
+    $("#emp_amount").val("");
+    $("#pay_mode").val("");
+    $("#ref_no").val("");
+
+  });
+
+  $("#emp_payment_btn").on("click", function () {
+
+    var cash_remain = $("#Summary_tbody tr:last").find("td").eq(2).text()
+    var emp_pay_arr = [];
+    $("#Summary_tbody tr").slice(0, -1).each(function () {
+      var pay_mode = $(this).find("p#p1").text().trim();
+      var pay_amount = $(this).find("strong").text().replace(/[^\d.-]/g, '').trim();
+      var reference = $(this).find("p#p2").text().trim();
+
+      emp_pay_arr .push({
+        pay_mode: pay_mode,
+        pay_amount: pay_amount,
+        reference: reference
+      });
+
+      insert_emp_payment({
+        emp_pay_arr: emp_pay_arr,
+        emp_id: emp_id,
+        paid_date: $("#paid_date").val(),
+        received_by: current_user_id,
+        cash_remain: cash_remain,
+      });
+
+    });
 
   })
 
@@ -135,12 +230,18 @@ function insert_emp_payment(data) {
 
   $.ajax({
     url: "php/insert_emp_payment.php",
-    type: "get", //send it through get method
+    type: "post", //send it through get method
     data: {
-      emp_pay_arr: data
+      emp_pay_arr: JSON.stringify(data.emp_pay_arr),
+      emp_id: data.emp_id,
+      paid_date: data.paid_date,
+      received_by: data.received_by,
+      cash_remain: data.cash_remain
     },
+
     success: function (response) {
 
+      console.log(response);
 
       if (response.trim() == "ok") {
 
@@ -157,7 +258,7 @@ function insert_emp_payment(data) {
 
     },
     error: function (xhr) {
-      //Do Something to handle error
+      console.error(xhr.responseText);
     }
   });
 

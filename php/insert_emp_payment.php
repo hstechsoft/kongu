@@ -20,7 +20,7 @@ return $data;
  $cash_id = 0;
 $sql_insert = "SET time_zone = '+05:30';"; // First query to set the time zone
 $sql_insert .= "INSERT INTO employee_cash (amount, dated,emp_id) VALUES ( $cash_remain, $paid_date,$emp_id)";
-
+// 
 if ($conn->multi_query($sql_insert) === TRUE) {
     $cash_id = $conn->insert_id;
 

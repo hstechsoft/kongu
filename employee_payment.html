@@ -57,69 +57,74 @@
             Employee Payment
           </div>
           <div class="card-body">
-            <div class="form-floating mb-4 ">
-              <select class="form-select" id="employee" name="employee" required>
-                <option selected value="null" disabled>Select Employee</option>
+            <form class="p-4 border rounded-4 shadow-sm bg-light needs-validation" id="" novalidate
+              onsubmit="return false">
 
-              </select>
-              <label for="employee">Employee
-                <span class="text-danger">*</span>
-              </label>
-            </div>
+              <div class="form-floating mb-4 ">
+                <select class="form-select" id="employee" name="employee" required>
+                  <option selected value="null" disabled>Select Employee</option>
 
-            <div class="form-floating mb-2 flex-fill">
-              <input type="date" class="form-control rounded-3" id="paid_date" placeholder="" required>
-              <label for="paid_date">Paid Date
-                <span class="text-danger">*</span> </label>
-
-              <div class="invalid-feedback">
-                Kindly Enter Vaild Data
+                </select>
+                <label for="employee">Employee
+                  <span class="text-danger">*</span>
+                </label>
               </div>
-            </div>
 
-            <div class="form-floating mb-2">
-              <input type="number" class="form-control rounded-3" id="emp_amount" placeholder="" required>
-              <label for="emp_amount">Receive Amount
-                <span class="text-danger">*</span> </label>
+              <div class="form-floating mb-2 flex-fill">
+                <input type="date" class="form-control rounded-3" id="paid_date" placeholder="" required>
+                <label for="paid_date">Paid Date
+                  <span class="text-danger">*</span> </label>
 
-              <div class="invalid-feedback">
-                Kindly Enter Vaild Data
+                <div class="invalid-feedback">
+                  Kindly Enter Vaild Data
+                </div>
               </div>
-            </div>
 
+              <div class="form-floating mb-2">
+                <input type="number" class="form-control rounded-3" id="emp_amount" placeholder="" required>
+                <label for="emp_amount">Receive Amount
+                  <span class="text-danger">*</span> </label>
 
-            <div class="form-floating mb-3">
-              <select class="form-select" id="pay_mode" required>
-                <option selected disabled value="null">Choose...</option>
-
-                <option value="Cash">Cash</option>
-                <option value="UPI">UPI</option>
-                <option value="Cheque">Cheque</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-                <option value="Other">Other</option>
-
-
-
-              </select>
-              <label for="pay_mode">pay_mode</label>
-              <div class="invalid-feedback">
-                Kindly Select Vaild
+                <div class="invalid-feedback">
+                  Kindly Enter Vaild Data
+                </div>
               </div>
-            </div>
 
-            <div class="form-floating mb-2">
-              <input type="number" class="form-control rounded-3" id="ref_no" placeholder="" required>
-              <label for="ref_no">Reference No
-                <span class="text-danger">*</span> </label>
 
-              <div class="invalid-feedback">
-                Kindly Enter Vaild Data
+              <div class="form-floating mb-3">
+                <select class="form-select" id="pay_mode" required>
+                  <option selected disabled value="null">Choose...</option>
+
+                  <option value="Cash">Cash</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="Other">Other</option>
+
+
+
+                </select>
+                <label for="pay_mode">pay_mode</label>
+                <div class="invalid-feedback">
+                  Kindly Select Vaild
+                </div>
               </div>
-            </div>
 
-            <div class="text-center">
-              <button type="reset" class="btn btn-primary " id="emp_payment_btn">Submit</button>
-            </div>
+              <div class="form-floating mb-2">
+                <input type="number" class="form-control rounded-3" id="ref_no" placeholder="" required>
+                <label for="ref_no">Reference No
+                  <span class="text-danger">*</span> </label>
+
+                <div class="invalid-feedback">
+                  Kindly Enter Vaild Data
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary " id="emp_payment_add_btn">Add</button>
+              </div>
+
+            </form>
           </div>
         </div>
 
@@ -145,6 +150,9 @@
 
 
             </table>
+            <div class="text-center">
+              <button type="reset" class="btn btn-primary " id="emp_payment_btn">Submit</button>
+            </div>
           </div>
         </div>
       </div>
@@ -234,6 +242,7 @@
       </div>
 
     </div>
+
 
 
 

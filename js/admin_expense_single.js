@@ -141,16 +141,62 @@ $(document).ready(function () {
   })
 
   $("#salary_table").on("click", ".fa-edit", function () {
-    alert()
-    var row = $(this).closest("tr");
 
+    var rowCard = $(this).closest("tr").find("#salary_card");
 
+    $("#salary_amount").val(rowCard.data("amount"));
+    $("#salary_date").val(rowCard.find(".bcard1 p").eq(0).text());
+    $("#salary_mode").val(rowCard.find(".bcard1 p").eq(1).text());
+    $("#salary_ref_no").val(rowCard.find(".bcard2 p").eq(0).text());
+    $("#salary_update_btn").data("salary_pay_id", rowCard.data("salary_pay_id"))
 
-    // $("#salary_amount").val(row.find(".bcard1 strong").eq(0).text());
-    // $("#salary_mode").val(row.find(".bcard2 p").eq(0).text());
-    // $("#salary_ref_no").val(row.find(".bcard2 p").eq(1).text());
-    // $("#salary_advance").addClass(row.find(".card").data("sel_adv"));
+    var isAdvance = rowCard.data("sel_adv");
+    $("#salary_advance").prop("checked", isAdvance === "checked");
+
+    $("#salary_add_btn").addClass("d-none")
+    $("#salary_update_btn").removeClass("d-none")
+
+  });
+
+  $("#salary_update_btn").on("click", function () {
+
+    let salary_advance = $("#salary_advance").is(":checked") ? "1" : "0";
+
+    if ($("#salary_year").val() == '' || $("#salary_month").val() == null || $("#salary_amount").val() == '' || $("#salary_mode").val() == null || $("#salary_ref_no").val() == '' || $("#salary_date").val() == '') {
+
+      salert("warning", "All the fields are required", "warning")
+    }
+    else {
+      console.log($(this).data("salary_pay_id"));
+
+      update_salary_payment({
+        paid_amount: $("#salary_amount").val(),
+        dated: $("#salary_date").val(),
+        pay_mode: $("#salary_mode").val(),
+        ref_no: $("#salary_ref_no").val(),
+        is_advance: salary_advance,
+        emp_id: emp_id,
+        month: $("#salary_month").val(),
+        paid_by: current_user_id,
+        salary_year: $("#salary_year").val(),
+        salary_month: $("#salary_month").val(),
+        salary_pay_id: $(this).data("salary_pay_id"),
+      });
+    }
+
   })
+
+  $("#salary_table").on("click", ".fa-trash", function () {
+    var rowCard = $(this).closest("tr").find("#salary_card");
+    console.log(rowCard.data("salary_pay_id"));
+
+    if (!rowCard.data("salary_pay_id")) return;
+    if (confirm("Are you sure you want to delete this salary?")) {
+      delete_salary_payment(rowCard.data("salary_pay_id"));
+    }
+  });
+
+
 
 
   $("#expense_btn").on("click", function () {
@@ -159,7 +205,7 @@ $(document).ready(function () {
     $("#team_form").addClass("d-none")
 
     get_expense_payment();
-    
+
     $("#salary_add_btn").trigger()
     $("#team_add_btn").trigger()
 
@@ -209,6 +255,14 @@ $(document).ready(function () {
       });
     }
   })
+  $("#expense_tbody").on("click", ".fa-trash", function () {
+    const paid_id = $(this).closest("tr").data("paid_id");
+    if (!paid_id) return;
+    if (confirm("Are you sure you want to delete this expense?")) {
+      delete_expense_payment(paid_id);
+    }
+  });
+
 
 
 
@@ -272,6 +326,13 @@ $(document).ready(function () {
       });
     }
   })
+  $("#team_tbody").on("click", ".fa-trash", function () {
+    const team_pay = $(this).closest("tr").data("team_pay");
+    if (!team_pay) return;
+    if (confirm("Are you sure you want to delete this team amount?")) {
+      delete_team_payment(team_pay);
+    }
+  })
 
 
 
@@ -332,9 +393,64 @@ function insert_salary_payment(data) {
     }
   });
 }
+
+function update_salary_payment(data) {
+
+  let m = $("#salary_month").val();
+  let y = $("#salary_year").val();
+
+  $.ajax({
+    url: "php/update_salary_payment.php",
+    type: "get", //send it through get method
+    data: data,
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() == "ok") {
+
+        get_salary_payment(m, y)
+        $("#salary_update_btn").addClass("d-none")
+        $("#salary_add_btn").removeClass("d-none")
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
+function delete_salary_payment(data) {
+  let m = $("#salary_month").val();
+  let y = $("#salary_year").val();
+
+  $.ajax({
+    url: "php/delete_salary_payment.php",
+    type: "get", //send it through get method
+    data: { salary_pay_id: data, },
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() == "ok") {
+        get_salary_payment(m, y)
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
 function get_salary_payment(month, year) {
   console.log(emp_id, month, year);
-
+  $("#salary_month").val(month);
 
   $.ajax({
     url: "php/get_salary_payment.php",
@@ -358,7 +474,6 @@ function get_salary_payment(month, year) {
 
           obj.forEach(function (item) {
 
-            count += 1;
             var full_data = '';
             var data = JSON.parse(item.pay_details);
 
@@ -367,30 +482,32 @@ function get_salary_payment(month, year) {
               data.forEach(function (dets) {
                 var advance = ""
                 var select = ""
+                count += 1;
 
                 if (dets.is_advance == "1") {
-                  advance = "<i class='fa fa-money-bill'></i>";
+                  advance = "<i class='fas fa-money-bill money-pulse text-success'></i>";
                   select = "checked";
                 }
 
-                full_data = `<div class="card  data-sel_adv=${select}" id="card">
+                full_data = `<div class="card"  data-sel_adv="${select}" data-salary_pay_id="${dets.salary_pay_id}" data-amount="${dets.paid_amount}"id="salary_card">
                               <div class="card-body">
-                                <div class="d-flex justify-content-between" id="bcard1">
+                                <div class="d-flex justify-content-between bcard1" id="">
                                   <p>${dets.dated}</p><p>${dets.pay_mode}</p>${advance}
                                 </div>
-                                <div class="d-flex justify-content-between" id="bcard2">
+                                <div class="d-flex justify-content-between bcard2" id="">
                                   <strong class="text-success">₹${dets.paid_amount}</strong><p>${dets.ref_no}</p>
                                 </div>
                               </div>
                             </div>`;
+                $("#salary_table").append(`<tr><td>${count}</td><td>${full_data}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
               })
             }
+            $("#salary_table").find("tr").eq(0).append(`<td   rowspan="${count}" class="align-item-center text-center fw-bold text-primary">₹${item.total_paid}</td>`)
 
-            $("#salary_table").append(`<tr><td>${count}</td><td>${full_data}</td><td>₹${item.total_paid}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
           })
         }
         else {
-          salert("Error", "User ", "error");
+          // salert("Error", "User ", "error");
         }
       }
       // location.reload();
@@ -403,6 +520,8 @@ function get_salary_payment(month, year) {
     }
   });
 }
+
+
 
 
 function insert_expense_payment(data) {
@@ -436,6 +555,34 @@ function update_expense_payment(data) {
     url: "php/update_expense_payment.php",
     type: "get", //send it through get method
     data: data,
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() == "ok") {
+        get_expense_payment()
+
+        $("#exp_add_btn").removeClass("d-none");
+        $("#exp_update_btn").addClass("d-none");
+
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
+function delete_expense_payment(data) {
+
+
+  $.ajax({
+    url: "php/delete_expense_payment.php",
+    type: "get", //send it through get method
+    data: { paid_id: data, },
     success: function (response) {
       console.log(response)
 
@@ -476,11 +623,11 @@ function get_expense_payment() {
           obj.forEach(function (item) {
             count += 1;
             var date = item.paid_date.split(" ")
-            $("#expense_tbody").append(`<tr data-paid_id='${item.paid_id}'><td>${count}</td><td>${item.paid_amount}</td><td>${item.pay_mode}</td><td>illa</td><td>${date[0]}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
+            $("#expense_tbody").append(`<tr data-paid_id='${item.paid_id}'><td>${count}</td><td>${item.paid_amount}</td><td>${item.pay_mode}</td><td>${date[0]}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
           })
         }
         else {
-          salert("Error", "User ", "error");
+          // salert("Error", "User ", "error");
         }
       }
       // location.reload();
@@ -493,6 +640,7 @@ function get_expense_payment() {
     }
   });
 }
+
 
 
 function insert_team_payment(data) {
@@ -526,6 +674,32 @@ function update_team_payment(data) {
     url: "php/update_team_payment.php",
     type: "get", //send it through get method
     data: data,
+    success: function (response) {
+      console.log(response)
+
+      if (response.trim() == "ok") {
+        get_team_payment()
+        $("#team_add_btn").removeClass("d-none");
+        $("#team_update_btn").addClass("d-none");
+      }
+      // location.reload();
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+}
+
+function delete_team_payment(data) {
+
+
+  $.ajax({
+    url: "php/delete_team_payment.php",
+    type: "get", //send it through get method
+    data: { team_pay: data, },
     success: function (response) {
       console.log(response)
 
@@ -839,6 +1013,7 @@ function get_current_time() {
           console.log(response);
 
           obj.forEach(function (obj) {
+            console.log(obj.date_time);
 
             $("#salary_date").val(obj.date)
             $("#exp_date").val(obj.date)

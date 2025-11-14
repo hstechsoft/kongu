@@ -21,7 +21,25 @@
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
+<style>
+.money-pulse {
+  font-size: 20px;
+  color: #00ff88;
+  animation: pulse 1.8s infinite ease-in-out;
+}
 
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 10px #5e9c53;
+  }
+  50% {
+    text-shadow: 0 0 30px #6db561;
+  }
+  100% {
+    text-shadow: 0 0 10px #52c58f;
+  }
+}
+</style>
 
 
 
@@ -221,6 +239,7 @@
 
                 <div class="text-center">
                   <button type="reset" class="btn btn-primary " id="salary_add_btn">OK</button>
+                  <button type="reset" class="btn btn-primary d-none" id="salary_update_btn">Update</button>
                 </div>
               </form>
 
@@ -233,8 +252,8 @@
                       
                       <th scope="col">#</th>
                       <th scope="col">Salary</th>
-                      <th scope="col">Total</th>
                       <th scope="col">Action</th>
+                      <th scope="col">Total</th>
 
                     </tr>
                   </thead>
@@ -331,7 +350,6 @@
                       <th scope="col">#</th>
                       <th scope="col">Amount</th>
                       <th scope="col">Mode</th>
-                      <th scope="col">Ref No</th>
                       <th scope="col">Date</th>
                       <th scope="col">Action</th>
 
