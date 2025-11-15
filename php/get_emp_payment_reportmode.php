@@ -1,9 +1,16 @@
 <?php
- include 'db_head.php';
+include 'db_head.php';
 
-  $emp_id = test_input($_GET['emp_id']);
-  
-  $paid_date = test_input($_GET['paid_date']);
+$emp_id_query = test_input($_GET['emp_id']) == "''" ? 1 : "emp_id = ".$_GET['emp_id'];
+
+$start_date = ($_GET['start_date']) == '' ? "2000-01-01" : ($_GET['start_date']);
+$end_date = ($_GET['end_date']) == '' ? "CURRENT_DATE"  : ($_GET['end_date']);
+$mp_date_query = "mp.paid_date BETWEEN '".$start_date."' AND '".$end_date."'";
+$exp_date_query = "ep.paid_date BETWEEN '".$start_date."' AND '".$end_date."'";
+$team_list  = ($_GET['team_list']) == '' ? 1 : "mp.member_id IN (SELECT members.id from members WHERE members.teamid IN (".$_GET['team_list'].")) ";
+$pay_mode_query = ($_GET['pay_mode']) == '' ? 1 : "mp.payment_mode IN (".$_GET['pay_mode'].") ";
+
+echo $emp_id_query;
 
 //  emp.id = '18' and mp.paid_date <= 	'2025-04-05' and mp.cash_id is null and mp.member_id in (SELECT members.id from members WHERE members.teamid in (66,55)) and 1
  
@@ -55,7 +62,9 @@ INNER JOIN employees emp ON
 INNER JOIN members mem ON
     mem.id = mp.member_id
 WHERE
-    emp.id =  19 and mp.paid_date <= '2025-11-15' and mp.cash_id is null
+    -- emp.id =  19 and mp.paid_date <= '2025-11-15' and mp.cash_id is null
+
+        $emp_id_query and $mp_date_query and $team_list and $pay_mode_query
 GROUP BY
     paid_date,
     teamid,
