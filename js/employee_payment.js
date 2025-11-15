@@ -563,7 +563,7 @@ function get_emp_payment_report(emp_id, paid_date) {
 
 
   $.ajax({
-    url: "php/get_emp_payment_report.php",
+    url: "php/get_emp_payment_reportmode.php",
     type: "get", //send it through get method
     data: {
       emp_id: emp_id,
