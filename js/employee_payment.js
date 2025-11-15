@@ -382,7 +382,7 @@ $(document).ready(function () {
 
     var cash_remain = $("#in_hand").text();
     var emp_pay_arr = [];
-console.log(cash_remain);
+    console.log(cash_remain);
 
     $("#Summary_tbody tr").slice(0, -1).each(function () {
 
@@ -498,7 +498,7 @@ console.log(cash_remain);
     var pay_mode = $("#pay_mode_report").val() || "";
     var team = $("#group_data").val() || "";
 
-    console.log(team," 1"+ employee_id,"2 "+ start_date," 3"+ end_date," 4"+ pay_mode);
+    console.log(team, " 1" + employee_id, "2 " + start_date, " 3" + end_date, " 4" + pay_mode);
 
     if (employee_id || start_date || end_date || pay_mode || team) {
       get_emp_payment_report_mode(employee_id, start_date, end_date, team, pay_mode)
@@ -627,7 +627,7 @@ function insert_emp_payment(data) {
 
 
 function get_emp_payment_report_mode(emp_id, start_date, end_date, team_list, pay_mode) {
-console.log(emp_id, start_date, end_date, team_list, pay_mode);
+  console.log(emp_id, start_date, end_date, team_list, pay_mode);
 
   $.ajax({
     url: "php/get_emp_payment_reportmode.php",
@@ -644,6 +644,9 @@ console.log(emp_id, start_date, end_date, team_list, pay_mode);
       console.log(response);
 
       $('#emp_report').empty();
+      $("#tcredit").text("null");
+      $("#tdebit").text("null");
+      $("#profit").text("null");
 
       if (response.trim() !== "error" && response.trim() !== "0 result") {
 
@@ -722,11 +725,11 @@ console.log(emp_id, start_date, end_date, team_list, pay_mode);
             </tr>
           `);
 
-          $("#tcredit").text(tcredit);
-          $("#tdebit").text(tdebit);
-          console.log(parseFloat(tcredit)-parseFloat(tdebit));
-          
-          $("#profit").text(parseFloat(tcredit)-parseFloat(tdebit));
+          $("#tcredit").text("₹" + tcredit);
+          $("#tdebit").text("₹" + tdebit);
+          console.log(parseFloat(tcredit) - parseFloat(tdebit));
+          var total = parseFloat(tcredit) - parseFloat(tdebit);
+          $("#profit").text("₹" + total);
 
         });
 
