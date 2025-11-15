@@ -3,14 +3,14 @@ include 'db_head.php';
 
 $emp_id_query = test_input($_GET['emp_id']) == "''" ? 1 : "emp_id = ".$_GET['emp_id'];
 
-$start_date = ($_GET['start_date']) == '' ? "2000-01-01" : test_input($_GET['start_date']);
+$start_date = ($_GET['start_date']) == '' ? "'2000-01-01'" : test_input($_GET['start_date']);
 $end_date = ($_GET['end_date']) == '' ? "CURRENT_DATE "  : test_input($_GET['end_date']);
 $mp_date_query = "mp.paid_date BETWEEN ".$start_date." AND ".$end_date."";
-$exp_date_query = "ep.paid_date BETWEEN ".$start_date." AND ".$end_date."";
+$exp_date_query = "dated BETWEEN ".$start_date." AND ".$end_date."";
 $team_list  = ($_GET['team_list']) == '' ? 1 : "mp.member_id IN (SELECT members.id from members WHERE members.teamid IN (".$_GET['team_list'].")) ";
 $pay_mode_query = ($_GET['pay_mode']) == '' ? 1 : "mp.payment_mode IN ('".$_GET['pay_mode']."') ";
 
-
+// echo $exp_date_query ;
 // echo $emp_id_query;
 // echo $mp_date_query;
 // echo "team_list -" . $team_list;
@@ -106,7 +106,7 @@ cd_final AS(
                 'amount',
                amount
             )
-        ) AS amount_details,sum(amount) as total,paymode,'expense' as cat from(SELECT DATE_FORMAT(ep.paid_date, '%Y-%m-%d')  as dated,sum(ep.paid_amount) as amount,ep.pay_mode as paymode,'expense' as cat FROM `expense_payment` ep WHERE emp_id = 19 GROUP by dated,paymode) as exp GROUP by dated
+        ) AS amount_details,sum(amount) as total,paymode,'expense' as cat from(SELECT DATE_FORMAT(ep.paid_date, '%Y-%m-%d')  as dated,sum(ep.paid_amount) as amount,ep.pay_mode as paymode,'expense' as cat FROM `expense_payment` ep WHERE $emp_id_query GROUP by dated,paymode) as exp GROUP by dated
 UNION ALL
 SELECT dated,JSON_ARRAYAGG(
             JSON_OBJECT(
@@ -115,7 +115,7 @@ SELECT dated,JSON_ARRAYAGG(
                 'amount',
                amount
             )
-        ) AS amount_details,sum(amount) as total,paymode,'salary' as cat from(SELECT DATE_FORMAT(sp.dated, '%Y-%m-%d')  as dated,sum(sp.paid_amount) as amount,sp.pay_mode as paymode, 'salary' as cat FROM `salary_payment` sp WHERE emp_id = 19 GROUP by dated,paymode) as sal GROUP by dated
+        ) AS amount_details,sum(amount) as total,paymode,'salary' as cat from(SELECT DATE_FORMAT(sp.dated, '%Y-%m-%d')  as dated,sum(sp.paid_amount) as amount,sp.pay_mode as paymode, 'salary' as cat FROM `salary_payment` sp WHERE $emp_id_query GROUP by dated,paymode) as sal GROUP by dated
 UNION ALL
 SELECT dated,JSON_ARRAYAGG(
             JSON_OBJECT(
@@ -124,7 +124,7 @@ SELECT dated,JSON_ARRAYAGG(
                 'amount',
                amount
             )
-        ) AS amount_details,sum(amount) as total,paymode,'team_payment' as cat from(SELECT DATE_FORMAT(tp.dated, '%Y-%m-%d')  as dated,tp.amount as amount,tp.pay_mode as paymode, 'team_payment' as cat FROM team_payment tp WHERE emp_id = 19 GROUP by dated,paymode) as team  GROUP by dated),
+        ) AS amount_details,sum(amount) as total,paymode,'team_payment' as cat from(SELECT DATE_FORMAT(tp.dated, '%Y-%m-%d')  as dated,tp.amount as amount,tp.pay_mode as paymode, 'team_payment' as cat FROM team_payment tp WHERE $emp_id_query GROUP by dated,paymode) as team  GROUP by dated),
 
 emp_pay_full AS(SELECT  ed.dated as paid_date,
                 'expense' as team,
@@ -135,7 +135,7 @@ emp_pay_full AS(SELECT  ed.dated as paid_date,
                 'details',
                amount_details
             )
-        ) AS details,sum(total) as total_amount from expense_details ed GROUP by dated),
+        ) AS details,sum(total) as total_amount from expense_details ed where $exp_date_query GROUP by dated),
         
   final as(SELECT   paid_date,
    team  COLLATE utf8mb4_unicode_ci as team,
