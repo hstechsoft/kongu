@@ -55,7 +55,7 @@ INNER JOIN employees emp ON
 INNER JOIN members mem ON
     mem.id = mp.member_id
 WHERE
-    emp.id =  $emp_id and mp.paid_date <= $paid_date and mp.cash_id is null
+    emp.id =  19 and mp.paid_date <= '2025-11-15' and mp.cash_id is null
 GROUP BY
     paid_date,
     teamid,
@@ -63,8 +63,8 @@ GROUP BY
 ),
 cd_final AS(
     SELECT
-        cd.paid_date,
-        cd.team,
+    DATE_FORMAT(cd.paid_date, '%Y-%m-%d') as paid_date,
+       cd.team AS team,
         cd.emp_id,
 
         JSON_ARRAYAGG(
@@ -76,7 +76,7 @@ cd_final AS(
                 'mode_sum',
                 amount
             )
-        ) AS details,
+        )  AS details,
         SUM(amount) AS total_amount
     FROM
         collection_details cd
@@ -84,8 +84,7 @@ cd_final AS(
         paid_date,
         teamid
 ),
-emp_pay_full AS(
-with expense_details as (SELECT dated,JSON_ARRAYAGG(
+ expense_details as (SELECT dated,JSON_ARRAYAGG(
             JSON_OBJECT(
                 'mode',
 				paymode,
@@ -110,23 +109,41 @@ SELECT dated,JSON_ARRAYAGG(
                 'amount',
                amount
             )
-        ) AS amount_details,sum(amount) as total,paymode,'team_payment' as cat from(SELECT DATE_FORMAT(tp.dated, '%Y-%m-%d')  as dated,tp.amount as amount,tp.pay_mode as paymode, 'team_payment' as cat FROM team_payment tp WHERE emp_id = 19 GROUP by dated,paymode) as team  GROUP by dated)
-SELECT ed.dated,'expense' as team,1 as emp_id,JSON_ARRAYAGG(
+        ) AS amount_details,sum(amount) as total,paymode,'team_payment' as cat from(SELECT DATE_FORMAT(tp.dated, '%Y-%m-%d')  as dated,tp.amount as amount,tp.pay_mode as paymode, 'team_payment' as cat FROM team_payment tp WHERE emp_id = 19 GROUP by dated,paymode) as team  GROUP by dated),
+
+emp_pay_full AS(SELECT  ed.dated as paid_date,
+                'expense' as team,
+                19 as emp_id,JSON_ARRAYAGG(
             JSON_OBJECT(
                 'cat',
 				cat,
                 'details',
                amount_details
             )
-        ) AS amount_details,sum(total) as total from expense_details ed GROUP by dated
-)
-SELECT
-    cd_final.*
-FROM
-    cd_final
-UNION ALL
-SELECT
-    epf.*   
+        ) AS details,sum(total) as total_amount from expense_details ed GROUP by dated),
+        
+  final as(SELECT   paid_date,
+   team  COLLATE utf8mb4_unicode_ci as team,
+   emp_id,
+   details COLLATE utf8mb4_unicode_ci as details,
+    total_amount as credit,
+   '' as debit
+  
+   from cd_final  
+   UNION ALL 
+     SELECT  paid_date,
+   team,
+   emp_id,
+   details,
+   "" as credit,
+     total_amount as debit from emp_pay_full  )
+     
+     SELECT * from final ORDER by paid_date
+
+    
+    
+
+ 
 SQL;
 
 if ($conn->multi_query($sql)) {
@@ -151,3 +168,6 @@ $conn->close();
  
 
 ?>
+
+
+ 
