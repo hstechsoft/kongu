@@ -5,7 +5,7 @@
   
   $paid_date = test_input($_GET['paid_date']);
 
- 
+//  emp.id = '18' and mp.paid_date <= 	'2025-04-05' and mp.cash_id is null and mp.member_id in (SELECT members.id from members WHERE members.teamid in (66,55)) and 1
  
 function test_input($data) {
 $data = trim($data);
