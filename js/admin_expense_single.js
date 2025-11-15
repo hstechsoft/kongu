@@ -229,10 +229,12 @@ $(document).ready(function () {
 
     var row = $(this).closest("tr");
 
+    console.log(row.find("td").eq(3).text());
+    
     $("#exp_paid_amount").val(row.find("td").eq(1).text());
     $("#exp_mode").val(row.find("td").eq(2).text());
     // $("#exp_ref_no").val(row.find("td").eq(1).text());
-    $("#exp_date").val(row.find("td").eq(4).text());
+    $("#exp_date").val(row.find("td").eq(3).text());
     $("#exp_update_btn").data("paid_id", row.data("paid_id"));
 
     $("#exp_add_btn").addClass("d-none");
@@ -492,7 +494,7 @@ function get_salary_payment(month, year) {
                 full_data = `<div class="card"  data-sel_adv="${select}" data-salary_pay_id="${dets.salary_pay_id}" data-amount="${dets.paid_amount}"id="salary_card">
                               <div class="card-body">
                                 <div class="d-flex justify-content-between bcard1" id="">
-                                  <p>${dets.dated}</p><p>${dets.pay_mode}</p>${advance}
+                                  <p>${dets.dated_format}</p><p>${dets.pay_mode}</p>${advance}
                                 </div>
                                 <div class="d-flex justify-content-between bcard2" id="">
                                   <strong class="text-success">₹${dets.paid_amount}</strong><p>${dets.ref_no}</p>
@@ -622,8 +624,7 @@ function get_expense_payment() {
           var obj = JSON.parse(response);
           obj.forEach(function (item) {
             count += 1;
-            var date = item.paid_date.split(" ")
-            $("#expense_tbody").append(`<tr data-paid_id='${item.paid_id}'><td>${count}</td><td>${item.paid_amount}</td><td>${item.pay_mode}</td><td>${date[0]}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
+            $("#expense_tbody").append(`<tr data-paid_id='${item.paid_id}'><td>${count}</td><td>${item.paid_amount}</td><td>${item.pay_mode}</td><td>${item.formatted_date}</td><td><i class="fa fa-edit text-warning me-3"></i><i class="fa fa-trash text-danger"></i></td></tr>`)
           })
         }
         else {

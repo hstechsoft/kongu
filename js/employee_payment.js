@@ -29,9 +29,69 @@ $(document).ready(function () {
 
   check_login();
 
+  get_team_dropdown();
+
   $("#unamed").text(localStorage.getItem("ls_uname"))
 
   get_employees_dropdown()
+
+
+  $('#group_txt_auto').on('input', function () {
+    //check the value not empty
+    if ($('#group_txt_auto').val() != "") {
+      $('#group_txt_auto').autocomplete({
+        //get data from databse return as array of object which contain label,value
+
+        source: function (request, response) {
+          $.ajax({
+            url: "php/get_group_auto.php",
+            type: "get", //send it through get method
+            data: {
+              term: request.term
+
+
+            },
+            dataType: "json",
+            success: function (data) {
+
+              console.log(data);
+              response($.map(data, function (item) {
+                return {
+                  label: item.group_number,
+                  value: item.group_number,
+                  id: item.id
+
+                };
+              }));
+
+            }
+
+          });
+        },
+        minLength: 2,
+        appendTo: "body",
+        cacheLength: 0,
+        select: function (event, ui) {
+
+          $('#team_select').val(ui.item.id).trigger('change');
+
+
+
+          // get_bom(ui.item.id)
+
+
+        },
+
+      }).autocomplete("instance")._renderItem = function (ul, item) {
+        return $("<li>")
+          .append("<div>" + item.label + "</div>")
+          .appendTo(ul);
+      };
+    }
+
+  });
+
+
 
   $("#employee").on("change", function (event) {
     event.preventDefault();
@@ -59,6 +119,7 @@ $(document).ready(function () {
   });
 
   let enter_total = 0;
+  enter_total = $("#Summary_tbody tr:last").find("td").eq(2).text().trim().replace(/[^0-9.-]/g, '') || 0;
 
 
   $("#emp_payment_add_btn").on("click", function () {
@@ -81,10 +142,11 @@ $(document).ready(function () {
     let refNo = $("#ref_no").val();
     let paidDate = $("#paid_date").val();
     let count = 0;
-    let final_total = $("#Summary_tbody tr:last").find("td").eq(1).text().trim();
-    final_total = final_total.replace(/[^0-9.-]/g, '')
+    // let final_total = $("#Summary_tbody tr:last").find("td").eq(1).text().trim();
+    // final_total = final_total.replace(/[^0-9.-]/g, '')
+    let in_hand = 0;
 
-    console.log(final_total);
+    // console.log(final_total);
 
 
 
@@ -94,14 +156,17 @@ $(document).ready(function () {
       let pay_type = $(this).find("td").eq(1).text().trim();
 
       if (pay_type === payMode) {
-        enter_total += parseFloat($("#emp_amount").val());
+        // enter_total += parseFloat($("#emp_amount").val());
         let rev_details = `
         <ul class='list-group'>
-          <li class='list-group-item'>
-            <p id="p1">${payMode}</p> <strong class="text-success">₹${empAmount}</strong><br> <p id="p2">${refNo}</p> ${paidDate}
+          <li class='list-group-item d-flex justify-content-between p-1'  data-pay_mode="${payMode}" data-empAmount="${empAmount}" data-refNo="${refNo}">
+            <strong class="text-success" style="font-size: 15px">₹${empAmount}</strong><p id="p2" class="mb-0"  style="font-size: 15px">${refNo}</p>
           </li>
         </ul>`;
         $(this).find("td").eq(3).append(rev_details);
+        // $(this).find("li").data("pay_mode", payMode)
+        // $(this).find("li").data("empAmount", empAmount)
+        // $(this).find("li").data("refNo", refNo)
         found = true;
         return false;
       }
@@ -110,16 +175,16 @@ $(document).ready(function () {
 
     if (!found) {
       count += 1;
-      enter_total += parseFloat($("#emp_amount").val());
+      // enter_total += parseFloat($("#emp_amount").val());
       let newRow = `
       <tr>
         <td>${count}</td>
         <td>${payMode}</td>
         <td></td>
         <td>
-          <ul class='list-group'>
-            <li class='list-group-item'>
-              <p id="p1">${payMode}</p> <strong class="text-success">₹${empAmount}</strong><br> <p id="p2">${refNo}</p> ${paidDate}
+          <ul class='list-group' >
+            <li class='list-group-item d-flex justify-content-between p-1' data-pay_mode="${payMode}" data-empAmount="${empAmount}" data-refNo="${refNo}">
+              <strong class="text-success"  style="font-size: 15px">₹${empAmount}</strong> <p id="p2" class="mb-0"   style="font-size: 15px">${refNo}</p>
             </li>
           </ul>
         </td>
@@ -127,9 +192,34 @@ $(document).ready(function () {
     `;
       $(newRow).insertBefore(rows.last());
     }
-    final_total = final_total - enter_total;
 
-    $("#Summary_tbody tr:last").find("td").eq(2).html(`<strong class="text-danger">₹${final_total}</strong>`);
+    // calculation
+
+    var total = $("#Summary_tbody tr:last").find("td").eq(1).text().trim().replace(/[^0-9.-]/g, '');
+    total = parseFloat(total);
+    console.log(total);
+
+    // $("#in_hand").find("strong").text("")
+    // $("#Summary_tbody tr:last").find("td").eq(2).text("")
+
+    var amount = 0;
+
+    $("#Summary_tbody tr").slice(0, -1).each(function () {
+      var td = $(this).find("td").eq(3);
+      td.find("li.list-group-item").each(function () {
+        var pay_amount = parseFloat($(this).find("strong").text().replace(/[^\d.-]/g, '').trim());
+        amount += pay_amount;
+      });
+    });
+
+    let final_total = total - amount;
+    console.log(amount, final_total);
+
+    // Update in-hand
+    $("#in_hand").find("strong").text("₹" + final_total);
+
+    // Store and update final total
+    $("#Summary_tbody tr:last").find("td").eq(2).html(`<strong class="text-danger">₹${amount}</strong>`);
 
 
     $("#emp_amount").val("");
@@ -138,21 +228,184 @@ $(document).ready(function () {
 
   });
 
-  $("#emp_payment_btn").on("click", function () {
 
-    var cash_remain = $("#Summary_tbody tr:last").find("td").eq(2).text()
-    var emp_pay_arr = [];
+
+
+
+
+  $("#Summary_tbody").on("click", "li.list-group-item", function () {
+
+    let row = $(this).closest("tr");
+    let rowIndex = row.index();
+
+    let td = $(this).closest("td");
+    let liIndex = td.find("li.list-group-item").index(this); // WHICH LI was clicked
+
+    // fill inputs
+    $("#emp_amount").val($(this).find("strong").text().replace(/[^\d.-]/g, '').trim());
+    $("#ref_no").val($(this).find("p").text().trim());
+    $("#pay_mode").val($(this).data("pay_mode"));
+    console.log($("#emp_amount").val(), $("#pay_mode").val(), $("#ref_no").val());
+
+    // Save identifiers
+    $("#emp_payment_edit_btn").data("rowIndex", rowIndex);
+    $("#emp_payment_edit_btn").data("liIndex", liIndex);
+    $("#emp_payment_delete_btn").data("rowIndex", rowIndex);
+    $("#emp_payment_delete_btn").data("liIndex", liIndex);
+
+    $("#emp_payment_edit_btn").removeClass("d-none");
+    $("#emp_payment_add_btn").addClass("d-none");
+    $("#emp_payment_delete_btn").removeClass("d-none");
+  });
+
+
+
+  $("#emp_payment_edit_btn").on("click", function () {
+
+    let rowIndex = $(this).data("rowIndex");
+    let liIndex = $(this).data("liIndex");
+
+    let payMode = $("#pay_mode").val();
+    let empAmount = $("#emp_amount").val();
+    let refNo = $("#ref_no").val();
+
+    // Find correct LI
+    let liToEdit = $("#Summary_tbody tr")
+      .eq(rowIndex)
+      .find("td").eq(3)
+      .find("li.list-group-item")
+      .eq(liIndex);
+
+    // Update only that LI
+    liToEdit.replaceWith(`
+        <li class='list-group-item d-flex justify-content-between p-1'
+            data-pay_mode="${payMode}"
+            data-empAmount="${empAmount}"
+            data-refNo="${refNo}">
+            <strong class="text-success" style="font-size: 15px">₹${empAmount}</strong>
+            <p class="mb-0" style="font-size: 15px">${refNo}</p>
+        </li>
+    `);
+
+    // ------------------------------------
+    // Recalculate totals
+    // ------------------------------------
+    var total = $("#Summary_tbody tr:last").find("td").eq(1).text().trim().replace(/[^0-9.-]/g, '');
+    total = parseFloat(total);
+    console.log(total);
+
+    // $("#in_hand").find("strong").text("")
+    // $("#Summary_tbody tr:last").find("td").eq(2).text("")
+
+    var amount = 0;
+
     $("#Summary_tbody tr").slice(0, -1).each(function () {
-      var pay_mode = $(this).find("p#p1").text().trim();
-      var pay_amount = $(this).find("strong").text().replace(/[^\d.-]/g, '').trim();
-      var reference = $(this).find("p#p2").text().trim();
+      var td = $(this).find("td").eq(3);
+      td.find("li.list-group-item").each(function () {
+        var pay_amount = parseFloat($(this).find("strong").text().replace(/[^\d.-]/g, '').trim());
+        amount += pay_amount;
+      });
+    });
 
-      emp_pay_arr .push({
-        pay_mode: pay_mode,
-        pay_amount: pay_amount,
-        reference: reference
+    let final_total = total - amount;
+    console.log(amount, final_total);
+
+    // Update in-hand
+    $("#in_hand").find("strong").text("₹" + final_total);
+
+    // Store and update final total
+    $("#Summary_tbody tr:last").find("td").eq(2).html(`<strong class="text-danger">₹${amount}</strong>`);
+
+    // Switch buttons
+    $("#emp_payment_edit_btn").addClass("d-none");
+    $("#emp_payment_delete_btn").addClass("d-none");
+    $("#emp_payment_add_btn").removeClass("d-none");
+
+    $("#emp_amount").val("");
+    $("#pay_mode").val("");
+    $("#ref_no").val("");
+
+  });
+
+
+  $("#emp_payment_delete_btn").on("click", function () {
+    $("#emp_amount").val("");
+    $("#pay_mode").val("");
+    $("#ref_no").val("");
+
+    $("#Summary_tbody tr").eq($(this).data("rowIndex")).find("td").eq(3).find("li.list-group-item").eq($(this).data("liIndex")).closest("ul").empty();
+
+    $("#emp_payment_edit_btn").addClass("d-none");
+    $("#emp_payment_delete_btn").addClass("d-none");
+    $("#emp_payment_add_btn").removeClass("d-none");
+
+
+
+    // Recalculate totals
+    // ------------------------------------
+    var total = $("#Summary_tbody tr:last").find("td").eq(1).text().trim().replace(/[^0-9.-]/g, '');
+    total = parseFloat(total);
+    console.log(total);
+
+    // $("#in_hand").find("strong").text("")
+    // $("#Summary_tbody tr:last").find("td").eq(2).text("")
+    var amount = 0;
+
+    $("#Summary_tbody tr").slice(0, -1).each(function () {
+      var td = $(this).find("td").eq(3);
+
+      td.find("li.list-group-item").each(function () {
+
+        var pay_amount = parseFloat($(this).find("strong").text().replace(/[^\d.-]/g, '').trim());
+        amount += pay_amount;
       });
 
+    });
+    console.log(amount);
+
+    let final_total = total - amount;
+    console.log(amount, final_total);
+
+    // Update in-hand
+    $("#in_hand").find("strong").text("₹" + final_total);
+
+    // Store and update final total
+    $("#Summary_tbody tr:last").find("td").eq(2).html(`<strong class="text-danger">₹${amount}</strong>`);
+  })
+
+
+
+
+
+
+  $("#emp_payment_btn").on("click", function () {
+
+    var cash_remain = $("#in_hand").text();
+    var emp_pay_arr = [];
+
+    $("#Summary_tbody tr").slice(0, -1).each(function () {
+
+      var td = $(this).find("td").eq(3);
+
+      td.find("li.list-group-item").each(function () {
+
+        var pay_mode = $(this).data("pay_mode");
+        var pay_amount = $(this).find("strong").text().replace(/[^\d.-]/g, '').trim();
+        var reference = $(this).find("p#p2").text().trim();
+
+        if (pay_mode || pay_amount || reference) {
+          emp_pay_arr.push({
+            pay_mode: pay_mode,
+            pay_amount: pay_amount,
+            reference: reference
+          });
+        }
+      });
+
+    });
+
+    console.log(emp_pay_arr);
+    if (emp_pay_arr.length > 0) {
       insert_emp_payment({
         emp_pay_arr: emp_pay_arr,
         emp_id: emp_id,
@@ -160,10 +413,45 @@ $(document).ready(function () {
         received_by: current_user_id,
         cash_remain: cash_remain,
       });
+    }
+    else {
+      salert("Error", "Data Missing", "error")
+    }
 
-    });
+  });
+
+
+
+  $("#view_report").on("click", function () {
+    $(this).addClass("d-none");
+    $("#emp_pay_report").empty();
+    $("#view_home").removeClass("d-none");
+    $(".emp_pay_form").addClass("d-none");
+    $(".report_form").removeClass("d-none");
+
+    $("#employee").val("");
+    $("#emp_amount").val("");
+    $("#pay_mode").val("");
+    $("#ref_no").val("");
+  })
+
+  $("#view_home").on("click", function () {
+    $(this).addClass("d-none");
+    $("#emp_pay_report").empty();
+    $("#view_report").removeClass("d-none");
+    $(".report_form").addClass("d-none");
+    $(".emp_pay_form").removeClass("d-none")
+
+    $("#employee").val("");
+    $("#from_date_report").val("");
+    $("#to_date_report").val("");
+    $("#pay_mode_report").val("");
+    $("#team_select").val("");
+    $("#group_txt_auto").val("");
 
   })
+
+
 
 
 });
@@ -244,8 +532,8 @@ function insert_emp_payment(data) {
       console.log(response);
 
       if (response.trim() == "ok") {
-
-        alert('success')
+        alert("success")
+        window.location.reload()
 
       }
       else {
@@ -388,6 +676,7 @@ function get_emp_payment_summary(emp_id, paid_date) {
 
         if (response.trim() != "0 result") {
           $("#Summary_tbody").empty()
+          $("#in_hand").find("strong").text("")
           var obj = JSON.parse(response);
 
           var count = 0;
@@ -417,6 +706,57 @@ function get_emp_payment_summary(emp_id, paid_date) {
   });
 }
 
+
+
+function get_team_dropdown() {
+
+
+  $.ajax({
+    url: "php/get_team_dropdown.php",
+    type: "get", //send it through get method
+    data: {
+
+    },
+    success: function (response) {
+
+
+
+      if (response.trim() != "error") {
+
+        if (response.trim() != "0 result") {
+
+          var obj = JSON.parse(response);
+          var count = 0
+
+
+          obj.forEach(function (obj) {
+            count = count + 1;
+            $('#team_select').append("<option value='" + obj.id + "' data-ic_factor='" + obj.ic_factor + "' data-dc_factor='" + obj.dc_charge_calculation + "' data-time_period='" + obj.time_period + "' data-leader='" + obj.leader_sts + "'>" + obj.group_mem + "</option>")
+
+          });
+
+
+        }
+        else {
+          // $("#@id@") .append("<td colspan='0' scope='col'>No Data</td>");
+
+        }
+      }
+
+
+
+
+
+    },
+    error: function (xhr) {
+      //Do Something to handle error
+    }
+  });
+
+
+
+
+}
 
 
 

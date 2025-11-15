@@ -51,12 +51,18 @@
     <!-- content -->
     <div class="row">
 
-      <div class="col-4 pe-0">
+      <div class="col-md-4 pe-0">
         <div class="card">
-          <div class="card-header text-center">
+
+          <div class="card-header text-center d-flex justify-content-between">
             Employee Payment
+            <button type="button" class="btn btn-mute text-success border-success border-1 " id="view_report">View <i
+                class="fa fa-file-text-o"></i></button>
+            <button type="button" class="btn btn-mute text-primary border-primary border-1 d-none" id="view_home">View
+              <i class="fa fa-home"></i></button>
           </div>
-          <div class="card-body">
+
+          <div class="card-body emp_pay_form">
             <form class="p-4 border rounded-4 shadow-sm bg-light needs-validation" id="" novalidate
               onsubmit="return false">
 
@@ -69,6 +75,7 @@
                   <span class="text-danger">*</span>
                 </label>
               </div>
+
 
               <div class="form-floating mb-2 flex-fill">
                 <input type="date" class="form-control rounded-3" id="paid_date" placeholder="" required>
@@ -122,13 +129,94 @@
 
               <div class="text-center">
                 <button type="submit" class="btn btn-primary " id="emp_payment_add_btn">Add</button>
+                <button type="submit" class="btn btn-primary d-none" id="emp_payment_edit_btn">Edit</button>
+                <button type="submit" class="btn btn-primary d-none" id="emp_payment_delete_btn"><i
+                    class="fa fa-trash"></i></button>
               </div>
+
+
+
 
             </form>
           </div>
+
+          <div class="card-body d-none report_form">
+            <form class="p-4 border rounded-4 shadow-sm bg-light needs-validation" id="" novalidate
+              onsubmit="return false">
+
+              <div class="form-floating mb-4 ">
+                <select class="form-select" id="employee_report" name="employee_report" required>
+                  <option selected value="null" disabled>Select Employee</option>
+
+                </select>
+                <label for="employee_report">Employee
+                  <span class="text-danger">*</span>
+                </label>
+              </div>
+
+
+              <div class="form-floating mb-2 flex-fill">
+                <input type="date" class="form-control rounded-3" id="from_date_report" placeholder="">
+                <label for="from_date_report">From Date</label>
+              </div>
+
+              <div class="form-floating mb-2 flex-fill">
+                <input type="date" class="form-control rounded-3" id="to_date_report" placeholder="">
+                <label for="to_date_report">To Date</label>
+              </div>
+
+
+              <div class="form-floating mb-3">
+                <select class="form-select" id="pay_mode_report">
+                  <option selected disabled value="null">Choose...</option>
+
+                  <option value="Cash">Cash</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="Other">Other</option>
+
+
+
+                </select>
+                <label for="pay_mode_report">pay_mode</label>
+                <div class="invalid-feedback">
+                  Kindly Select Vaild
+                </div>
+              </div>
+
+
+              <div class="d-flex   justify-content-between  align-content-center">
+                <div class="form-floating mb-3 w-25">
+                  <select class="form-select" id="team_select" required>
+                    <option selected disabled value="">Choose...</option>
+
+                  </select>
+                  <label for="team_select">Group
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="invalid-feedback">
+                    Kindly Select Vaild
+                  </div>
+                </div>
+
+                <div class="form-floating flex-fill mb-3">
+                  <input type="text" class="form-control rounded-3" id="group_txt_auto" placeholder="">
+                  <label for="group_txt_auto">Group
+                  </label>
+
+                </div>
+
+              </div>
+
+
+
+            </form>
+          </div>
+
         </div>
 
-        <div class="card p-2">
+        <div class="card p-2 emp_pay_form">
           <div class="table-responsive" style="width: auto;">
             <table class="table caption-top table-bordered table-striped ">
               <caption>Summary Table</caption>
@@ -136,8 +224,8 @@
 
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Available Amount </th>
+                  <th scope="col" style="width:0px">Description</th>
+                  <th scope="col" style="width:0px">Available Amount </th>
                   <th scope="col">Received</th>
 
                 </tr>
@@ -148,15 +236,21 @@
 
               </tbody>
 
-
             </table>
-            <div class="text-center">
-              <button type="reset" class="btn btn-primary " id="emp_payment_btn">Submit</button>
-            </div>
           </div>
+
+          <div class="d-flex justify-content-between" id="in_hand">
+            <p class="fw-bold ps-2">Cash In Hand</p>
+            <strong class="text-primary" style="margin-right: 28px;"></strong>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary " id="emp_payment_btn">Submit</button>
+          </div>
+
         </div>
       </div>
-      <div class="col-8 ps-0">
+      <div class="col-md-8 ps-0">
         <div class="card">
           <div class="card-header text-center">
             Empolyee Payment Report
