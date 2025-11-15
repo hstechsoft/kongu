@@ -111,7 +111,7 @@ SELECT dated,JSON_ARRAYAGG(
                amount
             )
         ) AS amount_details,sum(amount) as total,paymode,'team_payment' as cat from(SELECT DATE_FORMAT(tp.dated, '%Y-%m-%d')  as dated,tp.amount as amount,tp.pay_mode as paymode, 'team_payment' as cat FROM team_payment tp WHERE emp_id = 19 GROUP by dated,paymode) as team  GROUP by dated)
-SELECT ed.dated,JSON_ARRAYAGG(
+SELECT ed.dated,'expense' as team,1 as emp_id,JSON_ARRAYAGG(
             JSON_OBJECT(
                 'cat',
 				cat,
@@ -124,15 +124,9 @@ SELECT
     cd_final.*
 FROM
     cd_final
-LEFT JOIN emp_pay_full ef ON
-    cd_final.paid_date = ef.pay_date
-UNION
+UNION ALL
 SELECT
-    cd_final.*
-FROM
-    cd_final
-RIGHT JOIN emp_pay_full ef ON
-    cd_final.paid_date = ef.pay_date;
+    epf.*   
 SQL;
 
 if ($conn->multi_query($sql)) {
