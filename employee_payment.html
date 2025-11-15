@@ -193,11 +193,7 @@
 
                   </select>
                   <label for="team_select">Group
-                    <span class="text-danger">*</span>
                   </label>
-                  <div class="invalid-feedback">
-                    Kindly Select Vaild
-                  </div>
                 </div>
 
                 <div class="form-floating flex-fill mb-3">
@@ -207,8 +203,20 @@
 
                 </div>
 
+                <button type="button" class="btn btn-primary " id="group_add"
+                  style="    margin-bottom: 40px; margin-left: 2px;"><i class="fa fa-plus"></i></button>
+
               </div>
 
+
+              <div class="form-floating mb-2">
+                <input type="text" class="form-control rounded-3" id="group_data" placeholder="" disabled>
+              </div>
+
+
+              <div class="text-center">
+                <button type="button" class="btn btn-primary " id="search_report"><i class="fa fa-search"></i></button>
+              </div>
 
 
             </form>
@@ -250,7 +258,8 @@
 
         </div>
       </div>
-      <div class="col-md-8 ps-0">
+
+      <div class="col-md-8 ps-0 emp_pay_form">
         <div class="card">
           <div class="card-header text-center">
             Empolyee Payment Report
@@ -335,6 +344,65 @@
         </div>
       </div>
 
+      <div class="col-md-8 ps-0 d-none report_form">
+        <div class="card">
+          <div class="card-header text-center">
+            Empolyee Report
+          </div>
+          <div class="card-body">
+
+
+
+            <div class="table-responsive">
+              <table class="table caption-top table-bordered table-striped table-sm">
+                <caption>Employee report</caption>
+                <thead class="small">
+
+                  <tr class="small">
+                    <th scope="col" style="width: 0px;">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" style="width: 25%;">Voucher Type</th>
+                    <th scope="col" class="text-center">Details</th>
+                    <th scope="col">Credit</th>
+                    <th scope="col">Debit</th>
+
+
+                  </tr>
+
+                </thead>
+                <tbody id="emp_report">
+
+
+
+                </tbody>
+
+
+              </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center border-top pt-2">
+
+              <p class="fw-bold mb-0 text-end fw-bold">TOTAL</p>
+
+              <div class="d-flex gap-4">
+                <p class="mb-0 fw-semibold text-success fw-bold" id="tcredit"></p>
+                <p class="mb-0 fw-semibold text-danger fw-bold" id="tdebit"></p>
+              </div>
+
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center border-top pt-2">
+
+              <p class="fw-bold mb-0">Profit</p>
+
+              <p class="text-center text-primary fw-bold" id="profit"></p>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
 
 
@@ -372,7 +440,7 @@
   <!-- external js -->
   <script src="js/employee_payment.js" type="module"></script>
   <script src="js/menu.js" type="module"></script>
-  <script src="js/get_all_id.js" type="module"></script>
+  <!-- <script src="js/get_all_id.js" type="module"></script> -->
 
 </body>
 

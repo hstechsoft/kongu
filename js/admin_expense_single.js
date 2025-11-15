@@ -610,7 +610,7 @@ function get_expense_payment() {
     url: "php/get_expense_payment.php",
     type: "get", //send it through get method
     data: {
-      emp_id: current_user_id,
+      emp_id: emp_id,
     },
     success: function (response) {
       console.log(response)

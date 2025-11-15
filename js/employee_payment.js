@@ -382,6 +382,7 @@ $(document).ready(function () {
 
     var cash_remain = $("#in_hand").text();
     var emp_pay_arr = [];
+console.log(cash_remain);
 
     $("#Summary_tbody tr").slice(0, -1).each(function () {
 
@@ -422,6 +423,9 @@ $(document).ready(function () {
 
 
 
+
+
+
   $("#view_report").on("click", function () {
     $(this).addClass("d-none");
     $("#emp_pay_report").empty();
@@ -454,6 +458,67 @@ $(document).ready(function () {
 
 
 
+
+  var team_list = "";
+
+  $("#team_select").on("change", function () {
+    $("#group_txt_auto").val("");
+  })
+
+  $("#group_add").on("click", function () {
+
+    let dropVal = $("#team_select").val();
+    // let textVal = $("#group_txt_auto").val();
+
+    let value = dropVal;
+
+    if (value) {
+      if (team_list != "") {
+        team_list += ', "' + value + '"';
+      }
+      else {
+        team_list = '"' + value + '"';
+      }
+
+      // $("#search_report").data("team_list", team_list)
+
+    }
+    $("#group_data").val(team_list)
+    $("#team_select").val("");
+    $("#group_txt_auto").val("");
+
+  });
+
+
+  $("#search_report").on("click", function () {
+
+    var employee_id = $("#employee_report").val();
+    var start_date = $("#from_date_report").val() || "";
+    var end_date = $("#to_date_report").val() || "";
+    var pay_mode = $("#pay_mode_report").val() || "";
+    var team = $("#group_data").val() || "";
+
+    console.log(team," 1"+ employee_id,"2 "+ start_date," 3"+ end_date," 4"+ pay_mode);
+
+    if (employee_id || start_date || end_date || pay_mode || team) {
+      get_emp_payment_report_mode(employee_id, start_date, end_date, team, pay_mode)
+
+      team_list = "";
+
+      $("#employee_report").val();
+      $("#from_date_report").val();
+      $("#to_date_report").val();
+      $("#pay_mode_report").val();
+      $("#group_data").val();
+
+    }
+    else {
+      salert("Warning", "At Least one field is required", "warning");
+    }
+
+  });
+
+
 });
 
 
@@ -483,6 +548,7 @@ function get_employees_dropdown() {
           obj.forEach(function (obj) {
             count = count + 1;
             $('#employee').append("<option value = '" + obj.id + "'>" + obj.employee_name + "</option>")
+            $('#employee_report').append("<option value = '" + obj.id + "'>" + obj.employee_name + "</option>")
             cur_date = obj.cur_date
           });
 
@@ -559,11 +625,132 @@ function insert_emp_payment(data) {
 
 
 
+
+function get_emp_payment_report_mode(emp_id, start_date, end_date, team_list, pay_mode) {
+console.log(emp_id, start_date, end_date, team_list, pay_mode);
+
+  $.ajax({
+    url: "php/get_emp_payment_reportmode.php",
+    type: "get",
+    data: {
+      emp_id: emp_id,
+      start_date: start_date,
+      end_date: end_date,
+      team_list: team_list,
+      pay_mode: pay_mode,
+    },
+
+    success: function (response) {
+      console.log(response);
+
+      $('#emp_report').empty();
+
+      if (response.trim() !== "error" && response.trim() !== "0 result") {
+
+        var obj = JSON.parse(response);
+        var count = 0;
+        var tcredit = 0;
+        var tdebit = 0;
+
+        obj.forEach(function (row) {
+
+          count++;
+
+          let credit = row.credit ? "₹" + row.credit : "-";
+          let c = row.credit ? row.credit : 0;
+          tcredit += parseFloat(c);
+
+          let debit = row.debit ? "₹" + row.debit : "-";
+          let d = row.debit ? row.debit : 0;
+          tdebit += parseFloat(d);
+
+          let deb = JSON.parse(row.details);
+
+          let detailTable = `
+            <table class="table table-bordered table-sm">
+              <thead>
+                <tr class="bg-info text-center">
+                  <td>Type</td>
+                  <td>Mode / User</td>
+                  <td>Amount</td>
+                </tr>
+              </thead>
+              <tbody>
+          `;
+
+          deb.forEach(function (item) {
+
+            // ================= CATEGORY =================
+            if (item.cat) {
+              item.details.forEach(function (d) {
+                detailTable += `
+                  <tr class="bg-white">
+                    <td>${item.cat}</td>
+                    <td>${d.mode}</td>
+                    <td>₹${d.amount}</td>
+                  </tr>
+                `;
+              });
+            }
+
+            // =============== PAYMENT MODE ===============
+            if (item.payment_mode) {
+              item.pay_details.forEach(function (pd) {
+                detailTable += `
+                  <tr class="bg-white">
+                    <td>${item.payment_mode}</td>
+                    <td>${pd.user_name}</td>
+                    <td>₹${pd.paid_amount}</td>
+                  </tr>
+                `;
+              });
+            }
+
+          });
+
+          detailTable += `</tbody></table>`;
+          console.log(tcredit, tdebit);
+
+          $("#emp_report").append(`
+            <tr>
+              <td>${count}</td>
+              <td>${row.paid_date}</td>
+              <td>${row.team}</td>
+              <td>${detailTable}</td>
+              <td>${credit}</td>
+              <td>${debit}</td>
+            </tr>
+          `);
+
+          $("#tcredit").text(tcredit);
+          $("#tdebit").text(tdebit);
+          console.log(parseFloat(tcredit)-parseFloat(tdebit));
+          
+          $("#profit").text(parseFloat(tcredit)-parseFloat(tdebit));
+
+        });
+
+      }
+
+    },
+
+    error: function (xhr) {
+      console.error("AJAX Error:", xhr);
+    }
+
+  });
+
+}
+
+
+
+
+
 function get_emp_payment_report(emp_id, paid_date) {
 
 
   $.ajax({
-    url: "php/get_emp_payment_reportmode.php",
+    url: "php/get_emp_payment_report.php",
     type: "get", //send it through get method
     data: {
       emp_id: emp_id,

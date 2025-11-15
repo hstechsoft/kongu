@@ -21,25 +21,27 @@
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
-<style>
-.money-pulse {
-  font-size: 20px;
-  color: #00ff88;
-  animation: pulse 1.8s infinite ease-in-out;
-}
+  <style>
+    .money-pulse {
+      font-size: 20px;
+      color: #00ff88;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
 
-@keyframes pulse {
-  0% {
-    text-shadow: 0 0 10px #5e9c53;
-  }
-  50% {
-    text-shadow: 0 0 30px #6db561;
-  }
-  100% {
-    text-shadow: 0 0 10px #52c58f;
-  }
-}
-</style>
+    @keyframes pulse {
+      0% {
+        text-shadow: 0 0 10px #5e9c53;
+      }
+
+      50% {
+        text-shadow: 0 0 30px #6db561;
+      }
+
+      100% {
+        text-shadow: 0 0 10px #52c58f;
+      }
+    }
+  </style>
 
 
 
@@ -118,11 +120,13 @@
         <div class="modal-content">
 
           <!-- Modal Header -->
-          <div class="modal-header">
-            <button type="button" class="btn btn-primary " id="salary_btn">Salary</button>
-            <button type="button" class="btn btn-primary " id="expense_btn">Expense</button>
-            <button type="button" class="btn btn-primary " id="team_btn">Team Amount</button>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <div class="p-3">
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-primary " id="salary_btn">Salary</button>
+              <button type="button" class="btn btn-primary " id="expense_btn">Expense</button>
+              <button type="button" class="btn btn-primary " id="team_btn">Team Amount</button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
           </div>
 
           <!-- Modal body -->
@@ -249,7 +253,7 @@
                   <thead>
 
                     <tr>
-                      
+
                       <th scope="col">#</th>
                       <th scope="col">Salary</th>
                       <th scope="col">Action</th>
@@ -596,7 +600,7 @@
     <!-- external js -->
     <script src="js/admin_expense_single.js" type="module"></script>
     <script src="js/menu.js" type="module"></script>
-    <script src="js/get_all_id.js" type="module"></script>
+    <!-- <script src="js/get_all_id.js" type="module"></script> -->
 
 </body>
 

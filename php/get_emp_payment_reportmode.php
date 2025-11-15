@@ -10,7 +10,7 @@ $exp_date_query = "ep.paid_date BETWEEN '".$start_date."' AND '".$end_date."'";
 $team_list  = ($_GET['team_list']) == '' ? 1 : "mp.member_id IN (SELECT members.id from members WHERE members.teamid IN (".$_GET['team_list'].")) ";
 $pay_mode_query = ($_GET['pay_mode']) == '' ? 1 : "mp.payment_mode IN (".$_GET['pay_mode'].") ";
 
-echo $emp_id_query;
+echo $emp_id_query  ;
 
 //  emp.id = '18' and mp.paid_date <= 	'2025-04-05' and mp.cash_id is null and mp.member_id in (SELECT members.id from members WHERE members.teamid in (66,55)) and 1
  
